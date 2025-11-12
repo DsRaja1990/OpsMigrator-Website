@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from VersionOne to Azure DevOps using OpsMigrator AI. Complex hierarchy transformation with portfolio mapping.">
+    <title>VersionOne to Azure DevOps Migration | OpsMigrator Documentation</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 900px; margin: 0 auto; padding: calc(80px + 2rem) 2rem 4rem; }
+        .doc-header { text-align: center; margin-bottom: 3rem; }
+        .doc-badge { display: inline-block; padding: 0.5rem 1rem; background: linear-gradient(135deg, rgba(255, 59, 59, 0.1), rgba(255, 59, 59, 0.2)); color: #FF3B3B; border-radius: 50px; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: var(--dark); }
+        .doc-meta { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--gray); }
+        .doc-meta-item i { color: var(--primary-color); }
+        .doc-section { margin-bottom: 3rem; }
+        .doc-section h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--dark); padding-bottom: 0.5rem; border-bottom: 2px solid var(--gray-lightest); }
+        .doc-section h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 1rem; color: var(--dark-secondary); }
+        .doc-section p { line-height: 1.8; color: var(--gray); margin-bottom: 1rem; }
+        .doc-section ul, .doc-section ol { margin: 1rem 0 1rem 1.5rem; line-height: 1.8; color: var(--gray); }
+        .doc-section li { margin-bottom: 0.5rem; }
+        .highlight-box { background: linear-gradient(135deg, rgba(0, 102, 255, 0.05), rgba(123, 97, 255, 0.05)); border-left: 4px solid var(--primary-color); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box { background: linear-gradient(135deg, rgba(255, 184, 0, 0.05), rgba(255, 140, 66, 0.05)); border-left: 4px solid var(--warning-color); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .critical-box { background: linear-gradient(135deg, rgba(255, 59, 59, 0.05), rgba(255, 140, 66, 0.05)); border-left: 4px solid var(--danger-color); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: linear-gradient(135deg, rgba(0, 196, 140, 0.05), rgba(0, 212, 255, 0.05)); border-left: 4px solid var(--success-color); padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .code-block { background: #0F172A; color: #E2E8F0; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .step-number { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; font-weight: 700; margin-right: 0.75rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+        .feature-item { background: white; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid var(--gray-lightest); transition: all 0.3s ease; }
+        .feature-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+        .feature-item i { font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .feature-item h4 { font-weight: 600; margin-bottom: 0.5rem; color: var(--dark); }
+        .toc { background: var(--gray-lightest); padding: 2rem; border-radius: 0.75rem; margin: 2rem 0; }
+        .toc h3 { margin-top: 0; margin-bottom: 1rem; }
+        .toc ul { list-style: none; margin: 0; padding: 0; }
+        .toc li { margin-bottom: 0.5rem; }
+        .toc a { color: var(--primary-color); text-decoration: none; transition: all 0.2s ease; }
+        .toc a:hover { text-decoration: underline; padding-left: 0.5rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-color); text-decoration: none; font-weight: 600; margin-bottom: 2rem; transition: all 0.2s ease; }
+        .back-link:hover { gap: 0.75rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        td { color: var(--gray); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="../index.html#demo" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <a href="../index.html#scenarios" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Migration Scenarios
+        </a>
+
+        <div class="doc-header">
+            <span class="doc-badge"><i class="fas fa-exclamation-triangle"></i> Critical Complexity</span>
+            <h1 class="doc-title">VersionOne to Azure DevOps Migration</h1>
+            <p style="font-size: 1.125rem; color: var(--gray);">
+                Complex hierarchy transformation with portfolio item mapping, custom field migration, and user synchronization
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Duration: 2-3 weeks</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span>Data Volume: 50K-500K items</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Success Rate: 94.2%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Enterprise Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toc">
+            <h3><i class="fas fa-list"></i> Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">1. Migration Overview</a></li>
+                <li><a href="#prerequisites">2. Prerequisites & Requirements</a></li>
+                <li><a href="#connector-setup">3. Setting Up Connectors</a></li>
+                <li><a href="#hierarchy-mapping">4. Portfolio Hierarchy Mapping</a></li>
+                <li><a href="#migration-process">5. Migration Process</a></li>
+                <li><a href="#custom-fields">6. Custom Field Transformation</a></li>
+                <li><a href="#red-flags">7. Red Flags & Critical Issues</a></li>
+                <li><a href="#best-practices">8. Best Practices</a></li>
+                <li><a href="#faq">9. Frequently Asked Questions</a></li>
+            </ul>
+        </div>
+
+        <div class="doc-section" id="overview">
+            <h2><i class="fas fa-info-circle"></i> Migration Overview</h2>
+            <p>
+                VersionOne to Azure DevOps is one of the most complex enterprise migration paths. VersionOne's deep 
+                portfolio hierarchy (Theme → Initiative → Epic → Story → Task → Test) must be carefully mapped to 
+                Azure DevOps' flatter structure. This migration requires extensive planning, custom field transformation, 
+                and careful handling of organizational hierarchies.
+            </p>
+
+            <div class="critical-box">
+                <strong><i class="fas fa-exclamation-circle"></i> Complexity Note:</strong>
+                This migration is classified as CRITICAL complexity due to VersionOne's unique data model, extensive 
+                custom fields, and complex portfolio management structures. We strongly recommend a dedicated migration 
+                consultant and extended pilot phase.
+            </div>
+
+            <h3>What Gets Migrated</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-sitemap"></i>
+                    <h4>Portfolio Hierarchy</h4>
+                    <p>Themes, Initiatives, Epics mapped to ADO Epic hierarchy</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tasks"></i>
+                    <h4>Backlog Items</h4>
+                    <p>Stories, Defects, Tasks with full history</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-gantt"></i>
+                    <h4>Sprints & Releases</h4>
+                    <p>Sprint schedules, release plans, and timebox data</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <h4>Team Structure</h4>
+                    <p>Teams, members, and role assignments</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-flask"></i>
+                    <h4>Test Assets</h4>
+                    <p>Test sets, test cases, and test execution results</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-sliders-h"></i>
+                    <h4>Custom Attributes</h4>
+                    <p>100+ custom fields with data type transformation</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="doc-section" id="prerequisites">
+            <h2><i class="fas fa-clipboard-check"></i> Prerequisites & Requirements</h2>
+            
+            <h3>Source System (VersionOne)</h3>
+            <ul>
+                <li><strong>VersionOne Edition:</strong> Ultimate, Enterprise, or Team Edition</li>
+                <li><strong>API Access:</strong> VersionOne REST Data API v1 or Meta API</li>
+                <li><strong>Access Token:</strong> Admin-level access token from VersionOne settings</li>
+                <li><strong>Data Export Rights:</strong> Permissions to query all portfolio items, backlog items, and custom attributes</li>
+                <li><strong>API Version:</strong> VersionOne 2018 or later recommended</li>
+            </ul>
+
+            <h3>Target System (Azure DevOps)</h3>
+            <ul>
+                <li><strong>Process Template:</strong> Agile or custom process with Epic hierarchy support</li>
+                <li><strong>Inherited Process:</strong> Ability to customize work item types and add custom fields</li>
+                <li><strong>PAT Token:</strong> Full scopes for Work Items, Test Management, and Analytics</li>
+                <li><strong>Storage Quota:</strong> Sufficient for attachments and work item count</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong><i class="fas fa-exclamation-triangle"></i> Critical Requirement:</strong>
+                VersionOne migrations require custom Azure DevOps process templates. You cannot use default Agile, 
+                Scrum, or CMMI templates without customization. OpsMigrator will help create the necessary custom fields.
+            </div>
+        </div>
+
+        <div class="doc-section" id="connector-setup">
+            <h2><i class="fas fa-plug"></i> Setting Up Connectors</h2>
+            
+            <h3><span class="step-number">1</span> VersionOne Connector Setup</h3>
+            
+            <h4>Generate VersionOne Access Token</h4>
+            <ol>
+                <li>Log in to VersionOne as Administrator</li>
+                <li>Navigate to <strong>Admin</strong> → <strong>Applications</strong> → <strong>Application Manager</strong></li>
+                <li>Click <strong>Add Application</strong></li>
+                <li>Configure:
+                    <ul>
+                        <li><strong>Name:</strong> OpsMigrator Integration</li>
+                        <li><strong>Client Type:</strong> Service Account</li>
+                        <li><strong>Scopes:</strong> query:*, story:read, epic:read, defect:read, test:read, member:read</li>
+                    </ul>
+                </li>
+                <li>Copy the generated Client ID and Secret</li>
+            </ol>
+
+            <h4>Configure VersionOne Connector</h4>
+            <div class="code-block">
+<code>{
+  "connectorType": "VersionOne",
+  "name": "Production V1",
+  "baseUrl": "https://www.versionone.com/YourInstance",
+  "authentication": {
+    "authMethod": "OAuth",
+    "clientId": "YOUR_CLIENT_ID",
+    "clientSecret": "YOUR_CLIENT_SECRET",
+    "scope": "query:*"
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 20,
+    "retryAttempts": 5,
+    "backoffMultiplier": 3
+  },
+  "options": {
+    "apiVersion": "2018",
+    "includeClosedItems": true,
+    "includeTests": true,
+    "includeCustomAttributes": true,
+    "maxDepth": 6,
+    "batchSize": 100
+  }
+}</code>
+            </div>
+
+            <h3><span class="step-number">2</span> Azure DevOps Connector Setup</h3>
+            <p>(Same as Jira Cloud → ADO migration - see that documentation for PAT generation)</p>
+            
+            <div class="code-block">
+<code>{
+  "connectorType": "AzureDevOps",
+  "name": "Production ADO",
+  "baseUrl": "https://dev.azure.com/your-organization",
+  "authentication": {
+    "authMethod": "PAT",
+    "secretValue": "YOUR_PAT_TOKEN"
+  },
+  "options": {
+    "targetProject": "MigratedFromV1",
+    "processTemplate": "CustomAgile_V1Migration",
+    "createCustomFields": true,
+    "preserveHierarchy": true,
+    "bypassRules": true
+  }
+}</code>
+            </div>
+        </div>
+
+        <div class="doc-section" id="hierarchy-mapping">
+            <h2><i class="fas fa-project-diagram"></i> Portfolio Hierarchy Mapping</h2>
+            <p>
+                VersionOne's 6-level hierarchy must be intelligently collapsed into Azure DevOps' 3-level structure.
+            </p>
+
+            <h3>Hierarchy Transformation Strategy</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>VersionOne Level</th>
+                        <th>Azure DevOps Mapping</th>
+                        <th>Strategy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Theme</td>
+                        <td>Epic (L3)</td>
+                        <td>Highest portfolio level mapped to Level 3 Epic</td>
+                    </tr>
+                    <tr>
+                        <td>Initiative</td>
+                        <td>Epic (L2)</td>
+                        <td>Child of Theme Epic</td>
+                    </tr>
+                    <tr>
+                        <td>Epic</td>
+                        <td>Epic (L1)</td>
+                        <td>Child of Initiative Epic</td>
+                    </tr>
+                    <tr>
+                        <td>Story</td>
+                        <td>User Story</td>
+                        <td>Child of Epic, standard mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Task</td>
+                        <td>Task</td>
+                        <td>Child of Story, direct mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Test</td>
+                        <td>Test Case</td>
+                        <td>Linked to Story via Tested By relationship</td>
+                    </tr>
+                    <tr>
+                        <td>Defect</td>
+                        <td>Bug</td>
+                        <td>Direct mapping, linked to affected items</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <strong><i class="fas fa-lightbulb"></i> Hierarchy Preservation:</strong>
+                OpsMigrator maintains all parent-child relationships during transformation. Custom tags are added 
+                to identify original VersionOne levels (e.g., "V1-Theme", "V1-Initiative", "V1-Epic").
+            </div>
+
+            <h3>Alternative Flattening Strategy</h3>
+            <p>For organizations preferring simpler hierarchy:</p>
+            <ul>
+                <li><strong>Option A:</strong> Merge Theme + Initiative into single L2 Epic</li>
+                <li><strong>Option B:</strong> Use Tags to represent Theme/Initiative instead of Epic levels</li>
+                <li><strong>Option C:</strong> Custom "PortfolioLevel" field to preserve original structure</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong><i class="fas fa-exclamation-triangle"></i> Decision Required:</strong>
+                Hierarchy mapping strategy must be decided during planning phase. Changing mid-migration requires 
+                complete restart. OpsMigrator AI recommends Option A for most organizations.
+            </div>
+        </div>
+
+        <div class="doc-section" id="migration-process">
+            <h2><i class="fas fa-route"></i> Migration Process</h2>
+            
+            <h3><span class="step-number">1</span> Discovery & Analysis (3-5 days)</h3>
+            <ul>
+                <li>Connect to VersionOne and scan entire portfolio structure</li>
+                <li>Analyze custom attribute usage across 100+ fields</li>
+                <li>Generate hierarchy transformation plan</li>
+                <li>Identify red flags and dependencies</li>
+                <li>Calculate migration complexity score</li>
+            </ul>
+
+            <h3><span class="step-number">2</span> Azure DevOps Process Customization (2-3 days)</h3>
+            <ul>
+                <li>Create custom process inherited from Agile</li>
+                <li>Add VersionOne-specific custom fields (typical: 40-60 fields)</li>
+                <li>Configure work item types for hierarchy support</li>
+                <li>Set up area paths and iteration paths</li>
+                <li>Configure workflow states matching V1 statuses</li>
+            </ul>
+
+            <h3><span class="step-number">3</span> Configuration Phase (3-4 days)</h3>
+            <ul>
+                <li><strong>Custom Attribute Mapping:</strong> Map each V1 custom attribute to ADO field</li>
+                <li><strong>User Mapping:</strong> Critical - V1 member IDs to ADO user identities</li>
+                <li><strong>Team Mapping:</strong> V1 teams to ADO teams with area path assignments</li>
+                <li><strong>Sprint Mapping:</strong> V1 timeboxes to ADO iterations</li>
+                <li><strong>Status Workflow:</strong> Map V1 status values to ADO states</li>
+            </ul>
+
+            <h3><span class="step-number">4</span> Pilot Migration (5-7 days)</h3>
+            <ul>
+                <li>Select 1-2 small teams (2,000-5,000 items)</li>
+                <li>Execute portfolio-aware migration (top-down hierarchy)</li>
+                <li>Deep validation of hierarchy preservation</li>
+                <li>User acceptance testing with pilot teams</li>
+                <li>Refine mappings based on feedback</li>
+            </ul>
+
+            <h3><span class="step-number">5</span> Production Migration (7-14 days)</h3>
+            <ul>
+                <li>Migrate in phases by portfolio level:
+                    <ol>
+                        <li>Phase 1: Themes and Initiatives (Epic L3, L2)</li>
+                        <li>Phase 2: Epics (Epic L1)</li>
+                        <li>Phase 3: Stories and Defects</li>
+                        <li>Phase 4: Tasks</li>
+                        <li>Phase 5: Test Cases and Relationships</li>
+                    </ol>
+                </li>
+                <li>Validate each phase before proceeding to next</li>
+                <li>Monitor for memory/performance issues</li>
+            </ul>
+
+            <div class="critical-box">
+                <strong><i class="fas fa-hourglass-half"></i> Time Expectation:</strong>
+                Large VersionOne instances (100K+ items) may take 3-4 weeks. This is normal due to API rate limits 
+                and validation requirements. Budget adequate time for this migration.
+            </div>
+        </div>
+
+        <div class="doc-section" id="custom-fields">
+            <h2><i class="fas fa-sliders-h"></i> Custom Field Transformation</h2>
+            <p>
+                VersionOne organizations typically have 80-150 custom attributes. OpsMigrator intelligently transforms 
+                these to Azure DevOps custom fields.
+            </p>
+
+            <h3>Common Custom Attribute Patterns</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>V1 Attribute Type</th>
+                        <th>ADO Field Type</th>
+                        <th>Transformation Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Text</td>
+                        <td>String (Single Line)</td>
+                        <td>Direct copy, 255 char limit enforced</td>
+                    </tr>
+                    <tr>
+                        <td>LongText</td>
+                        <td>String (Multi Line / HTML)</td>
+                        <td>Preserve formatting</td>
+                    </tr>
+                    <tr>
+                        <td>Number</td>
+                        <td>Double / Integer</td>
+                        <td>Preserve precision</td>
+                    </tr>
+                    <tr>
+                        <td>Date</td>
+                        <td>DateTime</td>
+                        <td>Timezone conversion applied</td>
+                    </tr>
+                    <tr>
+                        <td>Relation (Single)</td>
+                        <td>Identity</td>
+                        <td>User mapping required</td>
+                    </tr>
+                    <tr>
+                        <td>Relation (Multiple)</td>
+                        <td>Tags / Custom Multi-User</td>
+                        <td>May require custom field</td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td>Picklist (String)</td>
+                        <td>Allowed values created</td>
+                    </tr>
+                    <tr>
+                        <td>Boolean</td>
+                        <td>Boolean</td>
+                        <td>Direct mapping</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Custom Attribute Consolidation</h3>
+            <p>OpsMigrator AI identifies opportunities to consolidate redundant custom attributes:</p>
+            <ul>
+                <li><strong>Similar Attributes:</strong> Merge attributes with >90% name similarity</li>
+                <li><strong>Unused Attributes:</strong> Flag attributes with <1% population for exclusion</li>
+                <li><strong>Duplicate Values:</strong> Identify picklists with duplicate allowed values</li>
+                <li><strong>Recommendation Engine:</strong> Suggest consolidation to stay within ADO limits</li>
+            </ul>
+        </div>
+
+        <div class="doc-section" id="red-flags">
+            <h2><i class="fas fa-flag"></i> Red Flags & Critical Issues</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FF3B3B;"></i>
+                    <h4>Deep Hierarchy Cycles</h4>
+                    <p><strong>Issue:</strong> Circular portfolio relationships detected</p>
+                    <p><strong>Mitigation:</strong> Break cycles, log warnings, notify for manual review</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FF3B3B;"></i>
+                    <h4>Custom Field Overflow</h4>
+                    <p><strong>Issue:</strong> >1024 custom attributes (ADO limit)</p>
+                    <p><strong>Mitigation:</strong> Mandatory consolidation or data archival</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FF8C42;"></i>
+                    <h4>Orphaned Portfolio Items</h4>
+                    <p><strong>Issue:</strong> Epics/Themes without parent relationships</p>
+                    <p><strong>Mitigation:</strong> Create "Unassigned" Epic at top level</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FF3B3B;"></i>
+                    <h4>Member Identity Gaps</h4>
+                    <p><strong>Issue:</strong> V1 members without matching ADO users</p>
+                    <p><strong>Mitigation:</strong> Critical - must resolve before migration</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FFB800;"></i>
+                    <h4>Historical Data Volume</h4>
+                    <p><strong>Issue:</strong> Excessive change history (>1M records)</p>
+                    <p><strong>Mitigation:</strong> Archive old history or increase timeout limits</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exclamation-circle" style="color: #FF8C42;"></i>
+                    <h4>Test Asset Complexity</h4>
+                    <p><strong>Issue:</strong> V1 test structure doesn't map to ADO test plans</p>
+                    <p><strong>Mitigation:</strong> Flatten test hierarchy, use test suites</p>
+                </div>
+            </div>
+
+            <div class="critical-box">
+                <strong><i class="fas fa-stop-circle"></i> Migration Blockers:</strong>
+                Unlike other migrations, VersionOne migrations have potential blockers that must be resolved:
+                <ul style="margin-top: 0.5rem; margin-bottom: 0;">
+                    <li>Custom field count exceeding ADO limits (must consolidate)</li>
+                    <li>Missing user mappings for critical members (must create accounts)</li>
+                    <li>Corrupted hierarchy data (must clean source data)</li>
+                </ul>
+                OpsMigrator will halt migration if blockers detected. Manual intervention required.
+            </div>
+        </div>
+
+        <div class="doc-section" id="best-practices">
+            <h2><i class="fas fa-star"></i> Best Practices</h2>
+            
+            <h3>Pre-Migration Best Practices</h3>
+            <ul>
+                <li><strong>Data Cleanup:</strong> Archive inactive projects, close obsolete items (critical for V1)</li>
+                <li><strong>Custom Attribute Audit:</strong> Document purpose of each custom attribute before migration</li>
+                <li><strong>Hierarchy Review:</strong> Validate portfolio structure integrity in VersionOne</li>
+                <li><strong>User Census:</strong> Comprehensive user mapping file prepared in advance</li>
+                <li><strong>Dedicated Consultant:</strong> Strongly recommended for first-time V1 migrations</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>Phase-by-Phase Validation:</strong> Never proceed to next phase without validation</li>
+                <li><strong>Memory Monitoring:</strong> Watch for memory issues with large hierarchies</li>
+                <li><strong>Relationship Audits:</strong> Spot-check parent-child relationships frequently</li>
+                <li><strong>Performance Tuning:</strong> Adjust batch sizes if timeouts occur</li>
+            </ul>
+
+            <h3>Post-Migration</h3>
+            <ul>
+                <li><strong>Extensive Training:</strong> V1 → ADO requires significant user re-training</li>
+                <li><strong>Query Migration:</strong> Recreate V1 saved queries as ADO work item queries</li>
+                <li><strong>Dashboard Recreation:</strong> V1 dashboards must be manually recreated in ADO</li>
+                <li><strong>Integration Updates:</strong> Update integrations pointing to V1 APIs</li>
+            </ul>
+
+            <div class="success-box">
+                <strong><i class="fas fa-trophy"></i> Success Story:</strong>
+                A Fortune 100 financial services company migrated 287,000 VersionOne items to Azure DevOps over 
+                4 weeks with 96.8% data accuracy using OpsMigrator with dedicated consulting.
+            </div>
+        </div>
+
+        <div class="doc-section" id="faq">
+            <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+            
+            <h3>Why is this migration so complex?</h3>
+            <p>
+                VersionOne's data model is fundamentally different from Azure DevOps. Deep portfolio hierarchies, 
+                extensive custom attributes, and tight team-portfolio coupling require sophisticated transformation 
+                logic. Most organizations underestimate the effort required.
+            </p>
+
+            <h3>Can we use the default Agile template?</h3>
+            <p>
+                No. VersionOne migrations require custom process templates with additional custom fields and hierarchy 
+                support. OpsMigrator will create this for you, but attempting to use default templates will result 
+                in significant data loss.
+            </p>
+
+            <h3>How long will our team be unable to work?</h3>
+            <p>
+                Zero downtime. Teams continue working in VersionOne during migration. We recommend a 1-week parallel 
+                running period post-migration for user adoption, then cutover to Azure DevOps.
+            </p>
+
+            <h3>What happens to VersionOne integrations?</h3>
+            <p>
+                All integrations must be reconfigured to Azure DevOps APIs. OpsMigrator provides an integration mapping 
+                guide, but actual reconfiguration is customer responsibility. Budget 1-2 weeks for integration updates.
+            </p>
+
+            <h3>Is there a simplified migration option?</h3>
+            <p>
+                Yes - you can choose to flatten the portfolio hierarchy (merge Themes/Initiatives) and exclude 
+                rarely-used custom attributes. This reduces complexity to "High" instead of "Critical" and can save 
+                1-2 weeks of migration time.
+            </p>
+
+            <h3>What's the recommended team size for this migration?</h3>
+            <p>
+                Minimum: Migration Lead (1), Azure DevOps Admin (1), VersionOne Admin (1), OpsMigrator Consultant (1).
+                Recommended: Add Testing Lead (1), Change Management (1) for smoother execution.
+            </p>
+
+            <h3>Do you offer dedicated consulting for VersionOne migrations?</h3>
+            <p>
+                Yes, and we strongly recommend it. VersionOne migrations have numerous decision points requiring 
+                expertise. Our Enterprise plan includes a dedicated migration architect for the entire project lifecycle.
+                Contact <a href="mailto:admin@opsmigrator.in">admin@opsmigrator.in</a> for consultation.
+            </p>
+        </div>
+
+        <div class="highlight-box" style="text-align: center; padding: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Need Expert Help with VersionOne Migration?</h3>
+            <p style="margin-bottom: 1.5rem;">
+                VersionOne migrations are complex. Let our certified migration architects guide you through every step.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#contact" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-tie"></i> Talk to Migration Architect
+                </a>
+                <a href="../index.html#demo" class="btn btn-outline btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Assessment
+                </a>
+            </div>
+        </div>
+
+        <a href="../index.html#scenarios" class="back-link" style="margin-top: 2rem;">
+            <i class="fas fa-arrow-left"></i> Back to All Migration Scenarios
+        </a>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                        <li><a href="versionone-to-ado.html">VersionOne → ADO</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

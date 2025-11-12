@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpsMigrator AI - Enterprise-grade intelligent migration platform for seamless transitions between ALM systems. Migrate from Jira, VersionOne, HP ALM, Bitbucket to Azure DevOps with AI-powered automation.">
+    <meta name="keywords" content="ALM migration, Jira to Azure DevOps, VersionOne migration, HP ALM migration, enterprise migration tool, AI-powered migration">
+    <title>OpsMigrator AI | Intelligent Enterprise Migration Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+                    <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="docs/index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="#demo" class="btn btn-secondary">Request Demo</a>
+                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                </div>
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <div class="hero-shape shape-1"></div>
+            <div class="hero-shape shape-2"></div>
+            <div class="hero-shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>AI-Powered Enterprise Migration</span>
+                </div>
+                <h1 class="hero-title">
+                    Seamless <span class="gradient-text">ALM Migrations</span><br>
+                    Powered by Intelligence
+                </h1>
+                <p class="hero-description">
+                    Transform your enterprise migration journey with AI-driven analysis, automated workflows, 
+                    and zero-downtime execution. Migrate from Jira, VersionOne, HP ALM, and more to Azure DevOps 
+                    with 97.8% success rate.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">247+</div>
+                        <div class="stat-label">Successful Migrations</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">2.4TB</div>
+                        <div class="stat-label">Data Migrated</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">97.8%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Real-time Monitoring</div>
+                    </div>
+                </div>
+                <div class="hero-cta">
+                    <a href="#demo" class="btn btn-primary btn-lg">
+                        <i class="fas fa-play-circle"></i>
+                        Start Free Analysis
+                    </a>
+                    <a href="#scenarios" class="btn btn-outline btn-lg">
+                        <i class="fas fa-route"></i>
+                        View Migration Paths
+                    </a>
+                </div>
+                <div class="hero-trust">
+                    <p>Trusted by enterprise teams worldwide</p>
+                    <div class="trust-badges">
+                        <span><i class="fas fa-shield-alt"></i> Enterprise Security</span>
+                        <span><i class="fas fa-clock"></i> Zero Downtime</span>
+                        <span><i class="fas fa-check-circle"></i> 93% Confidence Score</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Why Choose OpsMigrator</span>
+                <h2 class="section-title">Intelligent Migration at Your Fingertips</h2>
+                <p class="section-description">
+                    Leverage AI-powered analysis, automated workflows, and enterprise-grade infrastructure 
+                    for seamless migration experiences
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Our intelligent scanner analyzes your source systems and generates comprehensive migration recommendations with 93% confidence score.</p>
+                    <div class="feature-time">~5-10 minutes</div>
+                </div>
+                <div class="feature-card featured">
+                    <div class="feature-badge">Most Popular</div>
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Smart Migration</h3>
+                    <p>Execute automated migrations with real-time monitoring, validation, and rollback capabilities for production-ready results.</p>
+                    <div class="feature-status">Production Ready</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>System Integration</h3>
+                    <p>Connect and configure your source and target systems with secure, validated connections supporting 50+ integrations.</p>
+                    <div class="feature-count">50+ Integrations</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade encryption, role-based access control, and compliance with SOC 2, GDPR, and HIPAA standards.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Zero Downtime</h3>
+                    <p>Phased migration approach ensures your teams continue working without interruption during the entire migration process.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track migration progress, monitor system health, and view execution metrics across all active jobs in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Migration Scenarios -->
+    <section class="scenarios" id="scenarios">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Migration Paths</span>
+                <h2 class="section-title">Choose Your Migration Journey</h2>
+                <p class="section-description">
+                    Battle-tested migration patterns, each optimized for specific source-to-target combinations
+                </p>
+            </div>
+            <div class="scenarios-grid">
+                <!-- Jira Cloud to Azure DevOps -->
+                <div class="scenario-card complexity-medium">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge jira">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge ado">ADO</div>
+                        </div>
+                        <span class="complexity-badge medium">Medium</span>
+                    </div>
+                    <h3>Jira Cloud → Azure DevOps</h3>
+                    <p>Streamlined cloud-to-cloud migration with automated field mapping and real-time validation.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 1 week</span>
+                        <span><i class="fas fa-database"></i> 5K-50K</span>
+                        <span><i class="fas fa-percent"></i> 98.1%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Cloud API</span>
+                        <span>Real-time Sync</span>
+                        <span>Auto Mapping</span>
+                        <span>Validation</span>
+                    </div>
+                    <a href="docs/jira-cloud-to-ado.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- HP ALM to Azure DevOps -->
+                <div class="scenario-card complexity-high">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge alm">ALM</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge ado">ADO</div>
+                        </div>
+                        <span class="complexity-badge high">High</span>
+                    </div>
+                    <h3>HP ALM → Azure DevOps</h3>
+                    <p>Legacy system modernization with test case migration, requirement traceability, and defect linking.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 2-4 weeks</span>
+                        <span><i class="fas fa-database"></i> 20K-200K</span>
+                        <span><i class="fas fa-percent"></i> 92.5%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Test Migration</span>
+                        <span>Requirements</span>
+                        <span>Traceability</span>
+                        <span>Legacy Support</span>
+                    </div>
+                    <a href="docs/alm-to-ado.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- VersionOne to Azure DevOps -->
+                <div class="scenario-card complexity-critical">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge v1">V1</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge ado">ADO</div>
+                        </div>
+                        <span class="complexity-badge critical">Critical</span>
+                    </div>
+                    <h3>VersionOne → Azure DevOps</h3>
+                    <p>Complex hierarchy transformation with portfolio item mapping, custom field migration, and user synchronization.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 2-3 weeks</span>
+                        <span><i class="fas fa-database"></i> 50K-500K</span>
+                        <span><i class="fas fa-percent"></i> 94.2%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Portfolio Mapping</span>
+                        <span>Custom Fields</span>
+                        <span>User Sync</span>
+                        <span>Workflow Migration</span>
+                    </div>
+                    <a href="docs/versionone-to-ado.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- HP ALM to ALM Octane -->
+                <div class="scenario-card complexity-critical">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge alm">ALM</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge octane">ALM</div>
+                        </div>
+                        <span class="complexity-badge critical">Critical</span>
+                    </div>
+                    <h3>HP ALM (QC) → ALM Octane</h3>
+                    <p>Complex transformation from waterfall ALM to agile Octane with extensive manual intervention for workflow redesign.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 12-18 weeks</span>
+                        <span><i class="fas fa-database"></i> 50K-500K</span>
+                        <span><i class="fas fa-percent"></i> 78.3%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Requirement Hierarchy</span>
+                        <span>Workflow Transform</span>
+                        <span>Test Automation</span>
+                        <span>Baseline Loss Mgmt</span>
+                    </div>
+                    <a href="docs/alm-to-octane.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- Jira DC to Azure DevOps -->
+                <div class="scenario-card complexity-high">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge jira">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge ado">ADO</div>
+                        </div>
+                        <span class="complexity-badge high">High</span>
+                    </div>
+                    <h3>Jira DC → Azure DevOps</h3>
+                    <p>Enterprise-grade migration from Jira Data Center to Azure DevOps with on-premise batch processing.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 1-2 weeks</span>
+                        <span><i class="fas fa-database"></i> 10K-100K</span>
+                        <span><i class="fas fa-percent"></i> 96.8%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>On-premise</span>
+                        <span>Batch Processing</span>
+                        <span>Custom Workflows</span>
+                        <span>History Preservation</span>
+                    </div>
+                    <a href="docs/jira-dc-to-ado.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- Jira DC to Jira Cloud -->
+                <div class="scenario-card complexity-critical">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge jira">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge jira-cloud">J</div>
+                        </div>
+                        <span class="complexity-badge critical">Critical</span>
+                    </div>
+                    <h3>Jira DC → Jira Cloud</h3>
+                    <p>Comprehensive DC to Cloud migration with app compatibility analysis, workflow conversion, and user account mapping.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 3-4 weeks</span>
+                        <span><i class="fas fa-database"></i> 25K-250K</span>
+                        <span><i class="fas fa-percent"></i> 91.5%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>App Migration</span>
+                        <span>Workflow Conversion</span>
+                        <span>User Mapping</span>
+                        <span>Data Validation</span>
+                    </div>
+                    <a href="docs/jira-dc-to-cloud.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- Bitbucket to GitHub -->
+                <div class="scenario-card complexity-low">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge bitbucket">BB</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge github">GH</div>
+                        </div>
+                        <span class="complexity-badge low">Low</span>
+                    </div>
+                    <h3>Bitbucket → GitHub</h3>
+                    <p>Repository migration with commit history, branch preservation, and pull request conversion.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 3-5 days</span>
+                        <span><i class="fas fa-database"></i> 1K-10K</span>
+                        <span><i class="fas fa-percent"></i> 99.2%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Repository</span>
+                        <span>Commit History</span>
+                        <span>Branch Preservation</span>
+                        <span>PR Conversion</span>
+                    </div>
+                    <a href="docs/bitbucket-to-github.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+
+                <!-- GitHub to Azure DevOps -->
+                <div class="scenario-card complexity-medium">
+                    <div class="scenario-header">
+                        <div class="scenario-icons">
+                            <div class="icon-badge github">GH</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="icon-badge ado">ADO</div>
+                        </div>
+                        <span class="complexity-badge medium">Medium</span>
+                    </div>
+                    <h3>GitHub → Azure DevOps</h3>
+                    <p>Modern DevOps integration with issue-to-work item conversion and pipeline migration support.</p>
+                    <div class="scenario-meta">
+                        <span><i class="fas fa-clock"></i> 1 week</span>
+                        <span><i class="fas fa-database"></i> 5K-25K</span>
+                        <span><i class="fas fa-percent"></i> 97.6%</span>
+                    </div>
+                    <div class="scenario-features">
+                        <span>Issue Conversion</span>
+                        <span>Work Items</span>
+                        <span>Pipeline Migration</span>
+                        <span>Repository Sync</span>
+                    </div>
+                    <a href="docs/github-to-ado.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Simple Process</span>
+                <h2 class="section-title">How OpsMigrator Works</h2>
+                <p class="section-description">
+                    Four simple steps from analysis to successful migration
+                </p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>Connect Systems</h3>
+                    <p>Securely connect your source and target systems with validated credentials. Support for cloud and on-premise deployments.</p>
+                </div>
+                <div class="process-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>AI Analysis</h3>
+                    <p>Our intelligent scanner analyzes your data, identifies red flags, and generates comprehensive migration recommendations.</p>
+                </div>
+                <div class="process-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Configure & Review</h3>
+                    <p>Review AI recommendations, handle manual interventions, and configure migration strategy with phased approach.</p>
+                </div>
+                <div class="process-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Execute & Monitor</h3>
+                    <p>Execute automated migration with real-time monitoring, validation, and rollback capabilities for production-ready results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Flexible Plans</span>
+                <h2 class="section-title">Choose Your Plan</h2>
+                <p class="section-description">
+                    Transparent pricing with no hidden fees. Scale as you grow.
+                </p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Starter</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">2,999</span>
+                            <span class="period">/project</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to 10,000 items</li>
+                        <li><i class="fas fa-check"></i> 1 Migration scenario</li>
+                        <li><i class="fas fa-check"></i> AI-powered analysis</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li><i class="fas fa-check"></i> 30-day support window</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Professional</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">9,999</span>
+                            <span class="period">/project</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to 100,000 items</li>
+                        <li><i class="fas fa-check"></i> Multiple scenarios</li>
+                        <li><i class="fas fa-check"></i> AI-powered analysis</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> 90-day support window</li>
+                        <li><i class="fas fa-check"></i> Custom field mapping</li>
+                        <li><i class="fas fa-check"></i> Dedicated migration consultant</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">
+                            <span class="amount">Custom</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Unlimited items</li>
+                        <li><i class="fas fa-check"></i> All migration scenarios</li>
+                        <li><i class="fas fa-check"></i> AI-powered analysis</li>
+                        <li><i class="fas fa-check"></i> 24/7 Premium support</li>
+                        <li><i class="fas fa-check"></i> Unlimited support window</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                        <li><i class="fas fa-check"></i> On-premise deployment</li>
+                        <li><i class="fas fa-check"></i> SLA guarantees</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Start Your Migration Journey?</h2>
+                <p>Get a free migration analysis and discover how OpsMigrator can transform your ALM systems</p>
+                <div class="cta-buttons">
+                    <a href="#demo" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar-check"></i>
+                        Schedule Free Demo
+                    </a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-comments"></i>
+                        Talk to Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Get In Touch</span>
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-description">
+                    Have questions? We're here to help you succeed.
+                </p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Talk</h3>
+                    <p>Speak with our migration experts to discuss your specific needs and get personalized recommendations.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <a href="mailto:admin@opsmigrator.in">admin@opsmigrator.in</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <strong>Website</strong>
+                                <a href="https://opsmigrator.in">www.opsmigrator.in</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Support Hours</strong>
+                                <span>24/7 for Enterprise customers<br>Business hours for others</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="company" placeholder="Company Name">
+                        </div>
+                        <div class="form-group">
+                            <select id="migration-type">
+                                <option value="">Select Migration Type</option>
+                                <option value="jira-cloud-ado">Jira Cloud → Azure DevOps</option>
+                                <option value="jira-dc-ado">Jira DC → Azure DevOps</option>
+                                <option value="versionone-ado">VersionOne → Azure DevOps</option>
+                                <option value="alm-ado">HP ALM → Azure DevOps</option>
+                                <option value="alm-octane">HP ALM → ALM Octane</option>
+                                <option value="jira-dc-cloud">Jira DC → Jira Cloud</option>
+                                <option value="bitbucket-github">Bitbucket → GitHub</option>
+                                <option value="github-ado">GitHub → Azure DevOps</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" rows="4" placeholder="Tell us about your migration needs" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform powered by AI. Transform your ALM systems with confidence.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#scenarios">Migration Scenarios</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#demo">Request Demo</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="docs/index.html">All Migration Guides</a></li>
+                        <li><a href="docs/jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                        <li><a href="docs/jira-dc-to-ado.html">Jira DC → ADO</a></li>
+                        <li><a href="docs/versionone-to-ado.html">VersionOne → ADO</a></li>
+                        <li><a href="docs/alm-to-ado.html">HP ALM → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+                <p>Built with <i class="fas fa-heart"></i> for enterprise teams worldwide</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

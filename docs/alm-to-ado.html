@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from HP ALM to Azure DevOps - Legacy system modernization with OpsMigrator AI">
+    <title>HP ALM to Azure DevOps Migration Guide | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1000px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { background: linear-gradient(135deg, #FF8C42, #FFB800); color: white; padding: 3rem 2rem; border-radius: 1.5rem; margin-bottom: 3rem; }
+        .complexity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-weight: 600; margin-bottom: 1rem; backdrop-filter: blur(10px); }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .doc-meta { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-meta-item i { font-size: 1.25rem; }
+        .migration-overview { background: var(--gray-lightest); padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; }
+        .migrates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .migrates-item { background: white; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .migrates-item i { color: var(--primary-color); font-size: 1.25rem; }
+        .toc { background: white; border: 2px solid var(--gray-lightest); border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; }
+        .toc h3 { margin-bottom: 1rem; color: var(--dark); }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-lightest); }
+        .toc li:last-child { border-bottom: none; }
+        .toc a { color: var(--primary-color); text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .toc a:hover { text-decoration: underline; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { color: var(--dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--primary-color); }
+        .section h3 { color: var(--dark); margin: 2rem 0 1rem; }
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .warning-box { background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: #856404; margin-bottom: 0.5rem; }
+        .info-box { background: #D1ECF1; border-left: 4px solid #0078D4; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: #D4EDDA; border-left: 4px solid #00C48C; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .mapping-table th, .mapping-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        .mapping-table th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        .mapping-table tr:hover { background: var(--gray-lightest); }
+        .red-flag { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .red-flag-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .flag-severity { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; color: white; }
+        .severity-critical { background: #FF3B3B; }
+        .severity-high { background: #FF8C42; }
+        .severity-medium { background: #FFB800; }
+        .phase-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .phase-card { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; }
+        .phase-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <div class="complexity-badge">🔶 HIGH COMPLEXITY</div>
+            <h1 class="doc-title">HP ALM to Azure DevOps Migration</h1>
+            <p style="font-size: 1.125rem; opacity: 0.95;">
+                Comprehensive guide for modernizing legacy HP ALM to Azure DevOps with test case migration, traceability preservation, and workflow transformation.
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span><strong>Duration:</strong> 2-4 weeks</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span><strong>Data Volume:</strong> 50K-300K items</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Success Rate:</strong> 92.5%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Status:</strong> Production Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="migration-overview">
+            <h2 style="margin-bottom: 1rem;">What Gets Migrated</h2>
+            <p>Complete legacy system modernization with focus on test management and requirements traceability.</p>
+            <div class="migrates-grid">
+                <div class="migrates-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Requirements → User Stories</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-flask"></i>
+                    <span>Test Plans & Test Cases</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-bug"></i>
+                    <span>Defects with Traceability</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-link"></i>
+                    <span>Traceability Links</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-paperclip"></i>
+                    <span>Attachments & History</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-users"></i>
+                    <span>User Assignments</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#prerequisites"><span>1. Prerequisites</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#connectors"><span>2. Connector Setup</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#test-migration"><span>3. Test Case Migration Strategy</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#process"><span>4. Migration Process (5 Phases)</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#field-mapping"><span>5. Field Mapping</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#red-flags"><span>6. Red Flags & Mitigation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#validation"><span>7. Validation & Testing</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#best-practices"><span>8. Best Practices</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#faq"><span>9. FAQ</span><i class="fas fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="prerequisites" class="section">
+            <h2>1. Prerequisites</h2>
+            
+            <h3>HP ALM Requirements</h3>
+            <ul>
+                <li><strong>Version:</strong> ALM 11.x, 12.x, 15.x (REST API or OData enabled)</li>
+                <li><strong>Access Level:</strong> Project Administrator</li>
+                <li><strong>Network:</strong> REST API endpoint accessible (port 8080/8443)</li>
+                <li><strong>Authentication:</strong> Database authentication or LDAP credentials</li>
+                <li><strong>Permissions:</strong> Read access to Requirements, Tests, Test Runs, Defects</li>
+            </ul>
+
+            <h3>Azure DevOps Requirements</h3>
+            <ul>
+                <li><strong>Organization:</strong> Existing Azure DevOps organization</li>
+                <li><strong>Project:</strong> Target project with configured process template</li>
+                <li><strong>Access Level:</strong> Project Administrator or Project Collection Administrator</li>
+                <li><strong>PAT Token:</strong> Full access to Work Items, Test Plans, and Identity</li>
+                <li><strong>Test Plans License:</strong> Required for Test Plan/Test Suite migration</li>
+            </ul>
+
+            <h3>Technical Requirements</h3>
+            <ul>
+                <li>Minimum 4 GB RAM, 20 GB disk space</li>
+                <li>Network connectivity to both ALM and Azure DevOps</li>
+                <li>OpsMigrator CLI version 2.4+</li>
+            </ul>
+        </div>
+
+        <div id="connectors" class="section">
+            <h2>2. Connector Setup</h2>
+
+            <h3>Step 1: Configure HP ALM Connector</h3>
+            
+            <p><strong>Generating ALM Credentials:</strong></p>
+            <ol>
+                <li>Login to HP ALM web interface as Administrator</li>
+                <li>Navigate to <strong>Site Administration → Site Users</strong></li>
+                <li>Create service account: <code>svc-migration</code> with Project Admin role</li>
+                <li>Note REST API URL: <code>http://alm-server:8080/qcbin</code></li>
+                <li>Test API: <code>GET http://alm-server:8080/qcbin/api/domains</code></li>
+            </ol>
+
+            <p><strong>ALM Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "HPALM",
+  "baseUrl": "http://alm-server:8080/qcbin",
+  "authentication": {
+    "authMethod": "Basic",
+    "username": "svc-migration",
+    "secretValue": "PASSWORD"
+  },
+  "almConfiguration": {
+    "domain": "DEFAULT",
+    "project": "YOUR_PROJECT",
+    "apiVersion": "12.60",
+    "enableSSL": false,
+    "timeout": 90
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 15,
+    "maxConcurrentRequests": 5,
+    "retryAttempts": 3,
+    "retryDelayMs": 1500
+  },
+  "dataOptions": {
+    "includeAttachments": true,
+    "attachmentSizeLimit": 50,
+    "includeTestRuns": true,
+    "includeTraceability": true,
+    "maxHistoryDepth": 100
+  }
+}</div>
+
+            <h3>Step 2: Configure Azure DevOps Connector</h3>
+
+            <p><strong>Generating Azure DevOps PAT:</strong></p>
+            <ol>
+                <li>Navigate to <code>https://dev.azure.com/{organization}</code></li>
+                <li>Click profile icon → <strong>Personal access tokens</strong></li>
+                <li>Click <strong>+ New Token</strong></li>
+                <li>Configure scopes:
+                    <ul>
+                        <li><strong>Work Items:</strong> Read, Write, & Manage</li>
+                        <li><strong>Test Management:</strong> Read & Write</li>
+                        <li><strong>Project and Team:</strong> Read</li>
+                        <li><strong>Identity:</strong> Read</li>
+                        <li><strong>Graph:</strong> Read</li>
+                    </ul>
+                </li>
+                <li>Set expiration: 90+ days</li>
+                <li>Copy PAT token immediately (shown once)</li>
+            </ol>
+
+            <p><strong>Azure DevOps Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "AzureDevOps",
+  "baseUrl": "https://dev.azure.com/{organization}",
+  "authentication": {
+    "authMethod": "PAT",
+    "personalAccessToken": "YOUR_PAT_TOKEN"
+  },
+  "adoConfiguration": {
+    "organization": "your-org",
+    "project": "YourProject",
+    "apiVersion": "7.1",
+    "areaPath": "YourProject\\Migrated",
+    "iterationPath": "YourProject\\Sprint 1",
+    "processTemplate": "Agile"
+  },
+  "testManagement": {
+    "createTestPlans": true,
+    "createTestSuites": true,
+    "migrateTestCases": true,
+    "preserveTestHierarchy": true
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 100,
+    "maxConcurrentRequests": 10,
+    "retryAttempts": 3
+  }
+}</div>
+
+            <div class="info-box">
+                <p><strong>Test Plans License Required:</strong> Azure DevOps Test Plans feature requires separate licensing ($52/user/month). Ensure your organization has sufficient Test Plans licenses before migrating test cases. Alternative: Migrate tests as work items only (manual test cases as User Stories).</p>
+            </div>
+
+            <h3>Step 3: Validate Connections</h3>
+            <div class="code-block"># Validate both connectors
+opsmigrator connector validate --source alm-connector.json
+opsmigrator connector validate --target ado-connector.json
+
+# Expected output:
+✓ HP ALM connection successful
+  - Domain: DEFAULT, Project: YourProject
+  - Requirements: 23,847 accessible
+  - Test Cases: 14,592 accessible
+  - Defects: 5,203 accessible
+  - Traceability Links: 48,291 relationships
+
+✓ Azure DevOps connection successful
+  - Organization: your-org, Project: YourProject
+  - Test Plans: Enabled (12 licenses available)
+  - User mapping: 87% matched (13 missing accounts)
+  - Area/Iteration paths: Validated</div>
+        </div>
+
+        <div id="test-migration" class="section">
+            <h2>3. Test Case Migration Strategy</h2>
+
+            <h3>ALM Test Structure → Azure DevOps Mapping</h3>
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>HP ALM Entity</th>
+                        <th>Azure DevOps Entity</th>
+                        <th>Migration Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Test Folder</strong></td>
+                        <td><strong>Test Plan</strong></td>
+                        <td>Top-level test folders become Test Plans</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Set</strong></td>
+                        <td><strong>Test Suite</strong></td>
+                        <td>Hierarchical test sets preserved as nested suites</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test (Manual)</strong></td>
+                        <td><strong>Test Case</strong></td>
+                        <td>Test steps migrated 1:1 with Expected Results</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test (Automated)</strong></td>
+                        <td><strong>Test Case + Automation</strong></td>
+                        <td>Automation metadata preserved; scripts require manual linking</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Run</strong></td>
+                        <td><strong>Test Result</strong></td>
+                        <td>Historical test runs migrated as historical data (read-only)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Parameters</strong></td>
+                        <td><strong>Shared Parameters</strong></td>
+                        <td>Data-driven test parameters converted to ADO Shared Parameters</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Test Traceability Preservation</h3>
+            <p>OpsMigrator automatically recreates traceability links:</p>
+            <ul>
+                <li><strong>Requirements → Tests:</strong> ALM "Coverage" links become ADO "Tested By" links</li>
+                <li><strong>Tests → Defects:</strong> ALM "Defect" associations become ADO "Tests" links</li>
+                <li><strong>Requirements → Defects:</strong> Direct requirement-defect links preserved</li>
+                <li><strong>Test Runs → Defects:</strong> Test failure → defect relationships maintained</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Automated Test Scripts</h4>
+                <p><strong>Automation scripts are NOT migrated automatically.</strong> OpsMigrator migrates test case metadata and marks tests as "Automated" in Azure DevOps, but you must manually re-link automation scripts (UFT, Selenium, etc.) post-migration. Budget 1-2 weeks for automation re-integration.</p>
+            </div>
+
+            <h3>Test History Migration</h3>
+            <p>Historical test run data migrated as read-only reference:</p>
+            <ul>
+                <li><strong>Last 100 test runs per test case</strong> migrated (configurable)</li>
+                <li>Run status: Pass, Fail, Blocked, Not Completed</li>
+                <li>Execution date, tester, duration preserved</li>
+                <li>Test run attachments and screenshots migrated</li>
+                <li><strong>Note:</strong> Cannot re-execute historical runs; new runs start fresh in Azure DevOps</li>
+            </ul>
+        </div>
+
+        <div id="process" class="section">
+            <h2>4. Migration Process (5 Phases)</h2>
+
+            <div class="phase-timeline">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Discovery & Analysis</h4>
+                    <p><strong>Duration:</strong> 2-3 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Connect to HP ALM and scan data structure</li>
+                        <li>AI analysis: data quality, traceability health</li>
+                        <li>Generate migration plan with red flags</li>
+                        <li>User identity mapping (ALM → Azure AD)</li>
+                        <li><strong>AI Scan Time:</strong> 20-40 minutes</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Configuration</h4>
+                    <p><strong>Duration:</strong> 2-3 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Review and customize field mappings</li>
+                        <li>Configure test plan structure in Azure DevOps</li>
+                        <li>Resolve unmapped users and custom fields</li>
+                        <li>Define data filters (exclude archived data)</li>
+                        <li><strong>Workshops:</strong> 2-3 sessions</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Pilot Migration</h4>
+                    <p><strong>Duration:</strong> 3-5 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Migrate 1 representative test domain (5-10K items)</li>
+                        <li>Validate traceability links</li>
+                        <li>User acceptance testing with QA team</li>
+                        <li>Refine mappings based on feedback</li>
+                        <li><strong>Iterations:</strong> 1-2 cycles</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Production Migration</h4>
+                    <p><strong>Duration:</strong> 5-10 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Freeze ALM (read-only mode)</li>
+                        <li>Full data migration with real-time monitoring</li>
+                        <li>Batch processing: 20K-30K items/day</li>
+                        <li>Daily validation reports</li>
+                        <li><strong>Execution:</strong> Phased by test domain</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">5</div>
+                    <h4>Validation & Cutover</h4>
+                    <p><strong>Duration:</strong> 3-5 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Comprehensive validation (100% traceability check)</li>
+                        <li>QA team training on Azure Test Plans</li>
+                        <li>Parallel operation (ALM read-only, ADO active)</li>
+                        <li>ALM decommissioning planning</li>
+                        <li><strong>Support:</strong> 2 weeks hypercare</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4><i class="fas fa-trophy"></i> Success Story</h4>
+                <p><strong>Enterprise Healthcare Provider - 3-Week Migration</strong></p>
+                <ul>
+                    <li><strong>Scale:</strong> 187,000 items (52,000 requirements, 94,000 test cases, 41,000 defects)</li>
+                    <li><strong>Challenge:</strong> 15 years of test history, 840K traceability links, 450 active users</li>
+                    <li><strong>Result:</strong> 96.2% data accuracy, 99.8% traceability preservation</li>
+                    <li><strong>Timeline:</strong> 3 weeks including pilot (within planned 4-week window)</li>
+                    <li><strong>Outcome:</strong> Zero production incidents, 92% user satisfaction, ALM decommissioned after 4-week parallel run</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="field-mapping" class="section">
+            <h2>5. Field Mapping</h2>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>HP ALM Field</th>
+                        <th>Azure DevOps Field</th>
+                        <th>Transformation Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Requirement.Name</td>
+                        <td>User Story.Title</td>
+                        <td>Direct mapping, no transformation</td>
+                    </tr>
+                    <tr>
+                        <td>Requirement.Description</td>
+                        <td>User Story.Description</td>
+                        <td>HTML preserved in Azure DevOps rich text</td>
+                    </tr>
+                    <tr>
+                        <td>Requirement.Status</td>
+                        <td>User Story.State</td>
+                        <td>Custom mapping: Not Reviewed→New, Reviewed→Active, Approved→Active, Rejected→Removed</td>
+                    </tr>
+                    <tr>
+                        <td>Requirement.Priority</td>
+                        <td>User Story.Priority</td>
+                        <td>1→1, 2→2, 3→3, 4→4 (direct mapping)</td>
+                    </tr>
+                    <tr>
+                        <td>Test.Name</td>
+                        <td>Test Case.Title</td>
+                        <td>Direct mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Test.Steps</td>
+                        <td>Test Case.Steps</td>
+                        <td>Step Action + Expected Result preserved</td>
+                    </tr>
+                    <tr>
+                        <td>Test.Status</td>
+                        <td>Test Case.State</td>
+                        <td>Design→Design, Ready→Ready, Obsolete→Closed</td>
+                    </tr>
+                    <tr>
+                        <td>Defect.Summary</td>
+                        <td>Bug.Title</td>
+                        <td>Direct mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Defect.Severity</td>
+                        <td>Bug.Severity</td>
+                        <td>1-Critical→1-Critical, 2-High→2-High, etc.</td>
+                    </tr>
+                    <tr>
+                        <td>Defect.Status</td>
+                        <td>Bug.State</td>
+                        <td>New→New, Open→Active, Fixed→Resolved, Closed→Closed</td>
+                    </tr>
+                    <tr>
+                        <td>Attachment</td>
+                        <td>Work Item Attachment</td>
+                        <td>Binary attachments migrated (max 50 MB per file)</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Fields (100+)</td>
+                        <td>Custom Fields (selected)</td>
+                        <td>Migrate 20-30 most critical custom fields; document unmigrated fields</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><strong>Custom Field Strategy:</strong> HP ALM projects typically have 80-150 custom fields. Azure DevOps supports unlimited custom fields, but migrating all fields creates clutter. OpsMigrator provides usage analysis showing field population rates. Recommend migrating only fields with &gt;10% usage.</p>
+            </div>
+        </div>
+
+        <div id="red-flags" class="section">
+            <h2>6. Red Flags & Mitigation</h2>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Broken Traceability Links</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> 12% of requirements have invalid test coverage links (orphaned references)</p>
+                <p><strong>Impact:</strong> Traceability matrix incomplete post-migration; compliance/audit issues.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Run OpsMigrator's traceability health check before migration</li>
+                    <li>Clean up orphaned links in ALM (or accept data loss)</li>
+                    <li>Use OpsMigrator's "Best Effort" link reconstruction (attempts to match by name/ID)</li>
+                    <li>Generate pre/post migration traceability reports for comparison</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Large Attachments (>50 MB)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 237 attachments exceed Azure DevOps 60 MB file size limit</p>
+                <p><strong>Impact:</strong> Large attachments cannot be migrated; data loss for test evidence/screenshots.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator exports large files to Azure Blob Storage or file share</li>
+                    <li>Add link to external storage in work item comments</li>
+                    <li>Alternatively: compress attachments before migration (manual effort)</li>
+                    <li>Consider: Do you need 10-year-old 100 MB test recordings? Archive instead?</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Inactive User Accounts (18%)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 87 of 485 ALM users have no Azure AD account</p>
+                <p><strong>Impact:</strong> Work items assigned to retired users; no valid owner post-migration.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Export user mapping report from OpsMigrator</li>
+                    <li>Provision Azure AD accounts for active users (coordinate with IT)</li>
+                    <li>Map retired users to generic "Historical User" account</li>
+                    <li>Preserve original assignee name in custom field: "ALM Original Owner"</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Test Automation Scripts Not Portable</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> 4,200 automated tests use UFT/QTP framework</p>
+                <p><strong>Impact:</strong> Automation scripts cannot run in Azure DevOps without re-engineering.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Migrate test case metadata only; mark as "Automated" in Azure DevOps</li>
+                    <li>Budget separate project to re-platform UFT scripts to Selenium/Playwright</li>
+                    <li>Alternatively: Keep UFT framework, trigger from Azure Pipelines via API</li>
+                    <li><strong>No automatic solution; requires 8-16 weeks for automation migration</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Historical Test Run Volume (1M+ runs)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 1.2 million test run records spanning 10 years</p>
+                <p><strong>Impact:</strong> Migration time extended by 3-5 days; Azure DevOps storage costs increase.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Configure OpsMigrator to migrate last 100 runs per test case (default)</li>
+                    <li>Archive older test runs to Azure Blob Storage for historical reference</li>
+                    <li>Alternative: Migrate summary statistics only (pass/fail counts, not individual runs)</li>
+                    <li>Reduces migration scope by 70%; acceptable for most compliance requirements</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="validation" class="section">
+            <h2>7. Validation & Testing</h2>
+
+            <h3>Automated Validation Checks</h3>
+            <p>OpsMigrator performs comprehensive validation post-migration:</p>
+            <ul>
+                <li><strong>Item Count Verification:</strong> Requirements, Tests, Defects counts match (within 2% tolerance)</li>
+                <li><strong>Traceability Validation:</strong> 100% link reconstruction verification</li>
+                <li><strong>Field Data Integrity:</strong> Sample 5% of items, validate field values match source</li>
+                <li><strong>Attachment Verification:</strong> File size and count validation for all attachments</li>
+                <li><strong>User Assignment Check:</strong> Ensure all work items have valid assignees</li>
+            </ul>
+
+            <h3>Validation Report Example</h3>
+            <div class="code-block">OpsMigrator Validation Report - HP ALM to Azure DevOps
+============================================================
+Migration ID: ALM-ADO-20250112-001
+Completed: 2025-01-12 14:32:08 UTC
+
+SOURCE SUMMARY (HP ALM):
+  Requirements: 52,847
+  Test Cases: 94,203
+  Test Runs: 1,204,839 (filtered to 94,203 last runs)
+  Defects: 41,592
+  Traceability Links: 840,291
+  Attachments: 18,492 files (87.2 GB)
+
+TARGET SUMMARY (Azure DevOps):
+  User Stories: 52,704 (99.7% success)
+  Test Cases: 93,805 (99.6% success)
+  Test Results: 93,805 (historical)
+  Bugs: 41,401 (99.5% success)
+  Traceability Links: 838,447 (99.8% success)
+  Attachments: 18,215 files (84.9 GB)
+
+VALIDATION CHECKS:
+  ✓ Item counts: 99.6% accuracy (within tolerance)
+  ✓ Traceability: 99.8% links reconstructed
+  ✓ Field integrity: 98.2% exact match (5% sample)
+  ✓ Attachments: 98.5% migrated (277 oversized files exported to Blob Storage)
+  ⚠ User assignments: 87% matched (13% mapped to Historical User)
+
+RED FLAGS RESOLVED:
+  ✓ 1,844 orphaned traceability links cleaned up pre-migration
+  ✓ 87 inactive users mapped to Historical User account
+  ✓ 277 large attachments exported to Azure Blob Storage
+  ✓ 4,200 UFT automation tests marked for manual re-linking
+
+RECOMMENDATION: Migration successful. Proceed to UAT phase.</div>
+        </div>
+
+        <div id="best-practices" class="section">
+            <h2>8. Best Practices</h2>
+
+            <h3>Before Migration</h3>
+            <ul>
+                <li><strong>Data Cleanup:</strong> Archive obsolete test cases and requirements (reduces scope by 20-30%)</li>
+                <li><strong>Traceability Health:</strong> Run link validation in ALM; fix orphaned links before migration</li>
+                <li><strong>Azure DevOps Setup:</strong> Pre-configure Test Plans, Area Paths, Iteration Paths</li>
+                <li><strong>User Provisioning:</strong> Ensure all active ALM users have Azure AD accounts</li>
+                <li><strong>Stakeholder Buy-In:</strong> Conduct demo of pilot migration for QA team approval</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>ALM Freeze:</strong> Put ALM in read-only mode during production migration (prevents data drift)</li>
+                <li><strong>Phased Approach:</strong> Migrate test domains incrementally (1-2 domains per day)</li>
+                <li><strong>Real-Time Monitoring:</strong> Use OpsMigrator dashboard to track progress and errors</li>
+                <li><strong>Daily Validation:</strong> Run validation reports after each domain migration</li>
+                <li><strong>Communication:</strong> Send daily status updates to stakeholders</li>
+            </ul>
+
+            <h3>After Migration</h3>
+            <ul>
+                <li><strong>UAT Phase:</strong> 1-2 week QA team testing period before full cutover</li>
+                <li><strong>Training:</strong> Conduct Azure Test Plans training for QA team (2-day workshop)</li>
+                <li><strong>Parallel Operation:</strong> Run ALM (read-only) and ADO in parallel for 2-4 weeks</li>
+                <li><strong>Automation Re-Integration:</strong> Schedule separate project to re-link automation scripts</li>
+                <li><strong>ALM Decommissioning:</strong> Archive ALM database for compliance (7-year retention typical)</li>
+            </ul>
+        </div>
+
+        <div id="faq" class="section">
+            <h2>9. Frequently Asked Questions</h2>
+
+            <h3>Do I need Azure Test Plans licenses?</h3>
+            <p>Yes, if you want to migrate test plans, test suites, and test cases with full Test Management capabilities. Azure Test Plans costs $52/user/month. Alternative: Migrate tests as regular User Stories/Tasks without Test Plans licensing (loses test management features like test suites, test runs, test charts).</p>
+
+            <h3>What happens to automated test scripts?</h3>
+            <p>Test case metadata migrates (name, steps, expected results, automation flag), but scripts do NOT migrate automatically. You must manually re-link scripts post-migration. UFT/QTP scripts require re-platforming to Selenium/Playwright or API-triggered execution from Azure Pipelines. Budget 8-16 weeks for automation migration as separate project.</p>
+
+            <h3>Can I preserve test run history?</h3>
+            <p>Yes. OpsMigrator migrates the last 100 test runs per test case by default (configurable). Historical runs appear as read-only test results in Azure DevOps. You cannot re-execute them; new test execution starts fresh. Older runs can be archived to Azure Blob Storage for compliance.</p>
+
+            <h3>How are traceability links preserved?</h3>
+            <p>OpsMigrator reconstructs 99.8% of traceability links automatically. ALM "Coverage" links (Requirement→Test) become ADO "Tested By" links. Defect associations preserved as "Tests" link type. Orphaned links (broken references) are logged in validation report for manual review.</p>
+
+            <h3>What's the success rate for test case migration?</h3>
+            <p>99.6% test case success rate typical. Failures occur when: (1) Test case exceeds Azure DevOps 10K step limit (rare), (2) Circular traceability links detected (invalid data), (3) Network timeouts during large attachment upload. All failures logged with remediation guidance.</p>
+
+            <h3>How long does ALM need to be offline?</h3>
+            <p>ALM does NOT need to be offline. Recommended: freeze ALM (read-only mode) during 5-10 day production migration window. After migration, run parallel for 2-4 weeks while QA team validates Azure DevOps. Zero downtime for read access; temporary write blackout acceptable for most organizations.</p>
+
+            <h3>Can I migrate only specific test domains?</h3>
+            <p>Yes. OpsMigrator supports selective migration by domain, folder, or test set. Common scenario: Migrate active test suites first, archive obsolete tests. Reduces migration scope by 30-40% and accelerates timeline. Use AI analysis to identify low-usage test areas for archival.</p>
+        </div>
+
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Ready to Modernize Your Test Management?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Schedule a demo to see how OpsMigrator handles ALM to Azure DevOps migration with full traceability preservation.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#demo" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Demo
+                </a>
+                <a href="mailto:admin@opsmigrator.in" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Sales
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-lightest); text-align: center;">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Documentation Hub
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">All Guides</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

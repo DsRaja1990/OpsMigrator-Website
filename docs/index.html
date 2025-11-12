@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete documentation hub for OpsMigrator AI - Enterprise migration guides, connector setup, and best practices for all ALM systems.">
+    <title>Documentation Hub | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1100px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { text-align: center; margin-bottom: 4rem; }
+        .doc-title { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; color: var(--dark); }
+        .doc-subtitle { font-size: 1.25rem; color: var(--gray); max-width: 700px; margin: 0 auto 2rem; line-height: 1.7; }
+        .search-box { max-width: 600px; margin: 2rem auto; position: relative; }
+        .search-box input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 2px solid var(--gray-lighter); border-radius: 50px; font-size: 1rem; transition: all 0.3s ease; }
+        .search-box input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1); }
+        .search-box i { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 1.125rem; }
+        .doc-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+        .category-card { background: white; padding: 2rem; border-radius: 1rem; border: 2px solid var(--gray-lightest); transition: all 0.3s ease; }
+        .category-card:hover { border-color: var(--primary-color); transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
+        .category-icon { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(123, 97, 255, 0.1)); border-radius: 1rem; font-size: 2rem; color: var(--primary-color); margin-bottom: 1.5rem; }
+        .category-card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--dark); }
+        .category-card p { color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem; }
+        .category-links { list-style: none; padding: 0; margin: 0; }
+        .category-links li { margin-bottom: 0.75rem; }
+        .category-links a { color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease; font-weight: 500; }
+        .category-links a:hover { gap: 0.75rem; text-decoration: underline; }
+        .migration-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
+        .migration-card { background: white; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid var(--gray-lightest); transition: all 0.3s ease; text-decoration: none; display: block; }
+        .migration-card:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+        .migration-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .migration-icons { display: flex; align-items: center; gap: 0.5rem; }
+        .mini-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; font-weight: 700; color: white; font-size: 0.75rem; }
+        .migration-icons .fa-arrow-right { font-size: 1rem; color: var(--gray); }
+        .complexity-mini { padding: 0.25rem 0.5rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: white; }
+        .migration-card h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark); }
+        .migration-meta { display: flex; gap: 1rem; font-size: 0.875rem; color: var(--gray); margin-top: 1rem; }
+        .migration-meta span { display: flex; align-items: center; gap: 0.25rem; }
+        .section-divider { margin: 4rem 0; border: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gray-lightest), transparent); }
+        .quick-start { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); padding: 3rem; border-radius: 1.5rem; color: white; text-align: center; margin: 4rem 0; }
+        .quick-start h2 { color: white; margin-bottom: 1rem; }
+        .quick-start p { font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.95; }
+        .quick-start-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: left; margin-top: 2rem; }
+        .quick-step { background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 0.75rem; backdrop-filter: blur(10px); }
+        .quick-step-number { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: white; color: var(--primary-color); border-radius: 50%; font-weight: 700; margin-bottom: 1rem; }
+        .quick-step h4 { color: white; margin-bottom: 0.5rem; }
+        .quick-step p { font-size: 0.9375rem; opacity: 0.9; margin: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link active">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="../index.html#demo" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <h1 class="doc-title">OpsMigrator Documentation</h1>
+            <p class="doc-subtitle">
+                Comprehensive guides, tutorials, and best practices for migrating your ALM systems with confidence. 
+                Find everything you need to plan, execute, and validate your enterprise migration.
+            </p>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search documentation..." id="docSearch">
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="quick-start">
+            <h2>Get Started in 4 Simple Steps</h2>
+            <p>Your journey from planning to successful migration</p>
+            <div class="quick-start-steps">
+                <div class="quick-step">
+                    <div class="quick-step-number">1</div>
+                    <h4>Connect Systems</h4>
+                    <p>Configure secure connectors for source and target systems</p>
+                </div>
+                <div class="quick-step">
+                    <div class="quick-step-number">2</div>
+                    <h4>AI Analysis</h4>
+                    <p>Let our AI scan and recommend migration strategy</p>
+                </div>
+                <div class="quick-step">
+                    <div class="quick-step-number">3</div>
+                    <h4>Review & Configure</h4>
+                    <p>Customize field mappings and resolve red flags</p>
+                </div>
+                <div class="quick-step">
+                    <div class="quick-step-number">4</div>
+                    <h4>Execute & Monitor</h4>
+                    <p>Run migration with real-time validation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Categories -->
+        <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Browse by Category</h2>
+        <div class="doc-categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3>Migration Guides</h3>
+                <p>Step-by-step guides for each migration scenario with connector setup, field mapping, and validation.</p>
+                <ul class="category-links">
+                    <li><a href="jira-cloud-to-ado.html"><i class="fas fa-arrow-right"></i> Jira Cloud → Azure DevOps</a></li>
+                    <li><a href="jira-dc-to-ado.html"><i class="fas fa-arrow-right"></i> Jira DC → Azure DevOps</a></li>
+                    <li><a href="versionone-to-ado.html"><i class="fas fa-arrow-right"></i> VersionOne → Azure DevOps</a></li>
+                    <li><a href="alm-to-ado.html"><i class="fas fa-arrow-right"></i> HP ALM → Azure DevOps</a></li>
+                    <li><a href="#all-scenarios"><i class="fas fa-arrow-right"></i> View All 8 Scenarios</a></li>
+                </ul>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3>Connector Setup</h3>
+                <p>Learn how to configure secure connectors for all supported ALM platforms and version control systems.</p>
+                <ul class="category-links">
+                    <li><a href="#connector-jira"><i class="fas fa-arrow-right"></i> Jira Cloud & DC Connectors</a></li>
+                    <li><a href="#connector-ado"><i class="fas fa-arrow-right"></i> Azure DevOps Connector</a></li>
+                    <li><a href="#connector-v1"><i class="fas fa-arrow-right"></i> VersionOne Connector</a></li>
+                    <li><a href="#connector-alm"><i class="fas fa-arrow-right"></i> HP ALM Connector</a></li>
+                    <li><a href="#connector-github"><i class="fas fa-arrow-right"></i> GitHub & Bitbucket Connectors</a></li>
+                </ul>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI Features</h3>
+                <p>Understand how OpsMigrator AI analyzes your data and provides intelligent recommendations.</p>
+                <ul class="category-links">
+                    <li><a href="#ai-analysis"><i class="fas fa-arrow-right"></i> Intelligent Analysis Engine</a></li>
+                    <li><a href="#ai-mapping"><i class="fas fa-arrow-right"></i> Automated Field Mapping</a></li>
+                    <li><a href="#ai-red-flags"><i class="fas fa-arrow-right"></i> Red Flag Detection</a></li>
+                    <li><a href="#ai-recommendations"><i class="fas fa-arrow-right"></i> Smart Recommendations</a></li>
+                </ul>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Best Practices</h3>
+                <p>Learn from successful migrations and avoid common pitfalls with our comprehensive best practices.</p>
+                <ul class="category-links">
+                    <li><a href="#bp-planning"><i class="fas fa-arrow-right"></i> Migration Planning</a></li>
+                    <li><a href="#bp-data-cleanup"><i class="fas fa-arrow-right"></i> Data Cleanup & Preparation</a></li>
+                    <li><a href="#bp-pilot"><i class="fas fa-arrow-right"></i> Running Pilot Migrations</a></li>
+                    <li><a href="#bp-validation"><i class="fas fa-arrow-right"></i> Validation & Testing</a></li>
+                    <li><a href="#bp-cutover"><i class="fas fa-arrow-right"></i> Production Cutover</a></li>
+                </ul>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Troubleshooting</h3>
+                <p>Solutions for common issues, error messages, and debugging tips for migration problems.</p>
+                <ul class="category-links">
+                    <li><a href="#ts-auth"><i class="fas fa-arrow-right"></i> Authentication Issues</a></li>
+                    <li><a href="#ts-performance"><i class="fas fa-arrow-right"></i> Performance Optimization</a></li>
+                    <li><a href="#ts-validation"><i class="fas fa-arrow-right"></i> Validation Failures</a></li>
+                    <li><a href="#ts-field-mapping"><i class="fas fa-arrow-right"></i> Field Mapping Errors</a></li>
+                </ul>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3>FAQ & Support</h3>
+                <p>Frequently asked questions, pricing information, and how to get help from our expert team.</p>
+                <ul class="category-links">
+                    <li><a href="#faq-general"><i class="fas fa-arrow-right"></i> General Questions</a></li>
+                    <li><a href="#faq-pricing"><i class="fas fa-arrow-right"></i> Pricing & Licensing</a></li>
+                    <li><a href="#faq-technical"><i class="fas fa-arrow-right"></i> Technical FAQs</a></li>
+                    <li><a href="../index.html#contact"><i class="fas fa-arrow-right"></i> Contact Support</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- All Migration Scenarios -->
+        <div id="all-scenarios">
+            <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2rem;">All Migration Scenarios</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 3rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Detailed documentation for each supported migration path. Click any card to view the complete guide 
+                with connector setup, field mapping, and best practices.
+            </p>
+
+            <div class="migration-grid">
+                <!-- Jira Cloud to Azure DevOps -->
+                <a href="jira-cloud-to-ado.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0052CC, #2684FF);">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0078D4, #50E6FF);">ADO</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FFB800;">Medium</span>
+                    </div>
+                    <h4>Jira Cloud → Azure DevOps</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Cloud-to-cloud migration with automated field mapping and real-time validation
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 1 week</span>
+                        <span><i class="fas fa-check-circle"></i> 98.1%</span>
+                    </div>
+                </a>
+
+                <!-- Jira DC to Azure DevOps -->
+                <a href="jira-dc-to-ado.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0052CC, #2684FF);">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0078D4, #50E6FF);">ADO</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FF8C42;">High</span>
+                    </div>
+                    <h4>Jira DC → Azure DevOps</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Enterprise on-premise migration with batch processing and custom workflows
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 1-2 weeks</span>
+                        <span><i class="fas fa-check-circle"></i> 96.8%</span>
+                    </div>
+                </a>
+
+                <!-- VersionOne to Azure DevOps -->
+                <a href="versionone-to-ado.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #00A0DF, #00D4FF);">V1</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0078D4, #50E6FF);">ADO</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FF3B3B;">Critical</span>
+                    </div>
+                    <h4>VersionOne → Azure DevOps</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Complex portfolio hierarchy transformation with extensive custom field migration
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 2-3 weeks</span>
+                        <span><i class="fas fa-check-circle"></i> 94.2%</span>
+                    </div>
+                </a>
+
+                <!-- HP ALM to Azure DevOps -->
+                <a href="alm-to-ado.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #01A982, #00C48C);">ALM</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0078D4, #50E6FF);">ADO</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FF8C42;">High</span>
+                    </div>
+                    <h4>HP ALM → Azure DevOps</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Legacy system modernization with test case migration and traceability
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 2-4 weeks</span>
+                        <span><i class="fas fa-check-circle"></i> 92.5%</span>
+                    </div>
+                </a>
+
+                <!-- HP ALM to ALM Octane -->
+                <a href="alm-to-octane.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #01A982, #00C48C);">ALM</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #FF6B35, #FF8C42);">ALM</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FF3B3B;">Critical</span>
+                    </div>
+                    <h4>HP ALM → ALM Octane</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Waterfall to agile transformation requiring extensive manual intervention
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 12-18 weeks</span>
+                        <span><i class="fas fa-check-circle"></i> 78.3%</span>
+                    </div>
+                </a>
+
+                <!-- Jira DC to Jira Cloud -->
+                <a href="jira-dc-to-cloud.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0052CC, #2684FF);">J</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #2684FF, #00B8D9);">J</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FF3B3B;">Critical</span>
+                    </div>
+                    <h4>Jira DC → Jira Cloud</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        DC to Cloud migration with app compatibility and workflow conversion
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 3-4 weeks</span>
+                        <span><i class="fas fa-check-circle"></i> 91.5%</span>
+                    </div>
+                </a>
+
+                <!-- Bitbucket to GitHub -->
+                <a href="bitbucket-to-github.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0052CC, #2684FF);">BB</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #24292E, #586069);">GH</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #00C48C;">Low</span>
+                    </div>
+                    <h4>Bitbucket → GitHub</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        Repository migration with commit history and PR conversion
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 3-5 days</span>
+                        <span><i class="fas fa-check-circle"></i> 99.2%</span>
+                    </div>
+                </a>
+
+                <!-- GitHub to Azure DevOps -->
+                <a href="github-to-ado.html" class="migration-card">
+                    <div class="migration-header">
+                        <div class="migration-icons">
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #24292E, #586069);">GH</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <div class="mini-icon" style="background: linear-gradient(135deg, #0078D4, #50E6FF);">ADO</div>
+                        </div>
+                        <span class="complexity-mini" style="background: #FFB800;">Medium</span>
+                    </div>
+                    <h4>GitHub → Azure DevOps</h4>
+                    <p style="color: var(--gray); font-size: 0.875rem; line-height: 1.6;">
+                        DevOps integration with issue-to-work item conversion
+                    </p>
+                    <div class="migration-meta">
+                        <span><i class="fas fa-clock"></i> 1 week</span>
+                        <span><i class="fas fa-check-circle"></i> 97.6%</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- Need Help Section -->
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center;">
+            <h2 style="margin-bottom: 1rem;">Can't Find What You're Looking For?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Our expert team is here to help. Contact us for personalized guidance, custom migration strategies, 
+                or technical support.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#contact" class="btn btn-primary btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Support
+                </a>
+                <a href="../index.html#demo" class="btn btn-outline btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Consultation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#scenarios">Migration Scenarios</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">Documentation Hub</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Migration Guides</a></li>
+                        <li><a href="#connector-setup">Connector Setup</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                        <li><a href="../index.html#demo">Request Demo</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Simple documentation search
+        document.getElementById('docSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.migration-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

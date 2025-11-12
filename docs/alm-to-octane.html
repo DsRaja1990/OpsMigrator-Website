@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from HP ALM to ALM Octane - Waterfall to agile transformation with OpsMigrator AI">
+    <title>HP ALM to ALM Octane Migration Guide | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1000px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { background: linear-gradient(135deg, #FF3B3B, #FF8C42); color: white; padding: 3rem 2rem; border-radius: 1.5rem; margin-bottom: 3rem; }
+        .complexity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-weight: 600; margin-bottom: 1rem; backdrop-filter: blur(10px); }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .doc-meta { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-meta-item i { font-size: 1.25rem; }
+        .migration-overview { background: var(--gray-lightest); padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; }
+        .migrates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .migrates-item { background: white; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .migrates-item i { color: var(--primary-color); font-size: 1.25rem; }
+        .toc { background: white; border: 2px solid var(--gray-lightest); border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; }
+        .toc h3 { margin-bottom: 1rem; color: var(--dark); }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-lightest); }
+        .toc li:last-child { border-bottom: none; }
+        .toc a { color: var(--primary-color); text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .toc a:hover { text-decoration: underline; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { color: var(--dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--primary-color); }
+        .section h3 { color: var(--dark); margin: 2rem 0 1rem; }
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .warning-box { background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: #856404; margin-bottom: 0.5rem; }
+        .info-box { background: #D1ECF1; border-left: 4px solid #0078D4; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: #D4EDDA; border-left: 4px solid #00C48C; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .mapping-table th, .mapping-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        .mapping-table th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        .mapping-table tr:hover { background: var(--gray-lightest); }
+        .red-flag { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .red-flag-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .flag-severity { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; color: white; }
+        .severity-critical { background: #FF3B3B; }
+        .severity-high { background: #FF8C42; }
+        .severity-medium { background: #FFB800; }
+        .phase-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .phase-card { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; }
+        .phase-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <div class="complexity-badge">⚠️ CRITICAL COMPLEXITY - HIGHEST LEVEL</div>
+            <h1 class="doc-title">HP ALM to ALM Octane Migration</h1>
+            <p style="font-size: 1.125rem; opacity: 0.95;">
+                Complete guide for transforming waterfall-based HP ALM to agile-native ALM Octane with extensive workflow redesign and manual intervention.
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span><strong>Duration:</strong> 12-18 weeks</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span><strong>Data Volume:</strong> 100K-1M+ items</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Success Rate:</strong> 78.3%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Status:</strong> Production Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="migration-overview">
+            <h2 style="margin-bottom: 1rem;">What Gets Migrated</h2>
+            <p>This is the most complex migration scenario, involving a fundamental paradigm shift from waterfall to agile methodologies.</p>
+            <div class="migrates-grid">
+                <div class="migrates-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Requirements → Epics/Stories</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-flask"></i>
+                    <span>Test Plans → Gherkin Tests</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-bug"></i>
+                    <span>Defects → Defects</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Baselines → Releases</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-paperclip"></i>
+                    <span>Attachments & Links</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-users"></i>
+                    <span>User Assignments</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> Critical Migration Notice</h4>
+            <p><strong>This migration requires dedicated consulting engagement.</strong> The transformation from waterfall to agile is not just technical—it requires organizational change management, workflow redesign, and extensive stakeholder training. Expect 40-60% manual intervention for workflow and process transformation. Budget 3-4 months minimum with dedicated team.</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#prerequisites"><span>1. Prerequisites & Planning</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#connectors"><span>2. Connector Setup</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#transformation"><span>3. Waterfall to Agile Transformation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#workflow-redesign"><span>4. Workflow Redesign Strategy</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#process"><span>5. Migration Process (5 Phases)</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#red-flags"><span>6. Red Flags & Mitigation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#best-practices"><span>7. Best Practices</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#faq"><span>8. FAQ</span><i class="fas fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="prerequisites" class="section">
+            <h2>1. Prerequisites & Planning</h2>
+            
+            <h3>HP ALM Requirements</h3>
+            <ul>
+                <li><strong>Version:</strong> ALM 11.x, 12.x, 15.x (REST API enabled)</li>
+                <li><strong>Access Level:</strong> Project Administrator or Site Administrator</li>
+                <li><strong>Network:</strong> REST API endpoint accessible (typically port 8080/8443)</li>
+                <li><strong>Authentication:</strong> Database authentication or LDAP/SSO credentials</li>
+                <li><strong>Permissions:</strong> Read access to all domains, projects, requirements, tests, defects</li>
+            </ul>
+
+            <h3>ALM Octane Requirements</h3>
+            <ul>
+                <li><strong>Version:</strong> ALM Octane 16.x or later (SaaS or on-premise)</li>
+                <li><strong>Access Level:</strong> Workspace Admin or Shared Space Admin</li>
+                <li><strong>Authentication:</strong> OAuth Client ID/Secret or API Access Key</li>
+                <li><strong>Shared Space:</strong> Pre-configured with appropriate workspaces</li>
+                <li><strong>Agile Methodology:</strong> Scrum or SAFe process configured</li>
+            </ul>
+
+            <h3>Technical Requirements</h3>
+            <ul>
+                <li>Minimum 8 GB RAM, 50 GB disk space for migration workspace</li>
+                <li>Network connectivity to both ALM and Octane (VPN if required)</li>
+                <li>SQL Server/Oracle for ALM database (read-only access helpful for validation)</li>
+                <li><strong>Dedicated consultant recommended</strong> - This is NOT a lift-and-shift migration</li>
+            </ul>
+
+            <div class="info-box">
+                <p><strong>Planning Timeline:</strong> Budget 3-4 weeks for assessment and planning before technical migration begins. This includes stakeholder interviews, workflow mapping, agile training requirements, and organizational change management planning.</p>
+            </div>
+        </div>
+
+        <div id="connectors" class="section">
+            <h2>2. Connector Setup</h2>
+
+            <h3>Step 1: Configure HP ALM Connector</h3>
+            
+            <p><strong>Generating ALM Credentials:</strong></p>
+            <ol>
+                <li>Login to HP ALM web interface as Administrator</li>
+                <li>Navigate to <strong>Site Administration → Site Users</strong></li>
+                <li>Create dedicated service account: <code>svc-migration</code></li>
+                <li>Grant <strong>Project Administrator</strong> role to all projects being migrated</li>
+                <li>Note the REST API URL: <code>http://alm-server:8080/qcbin</code></li>
+                <li>Test API access: <code>GET http://alm-server:8080/qcbin/rest/is-authenticated</code></li>
+            </ol>
+
+            <p><strong>ALM Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "HPALM",
+  "baseUrl": "http://alm-server:8080/qcbin",
+  "authentication": {
+    "authMethod": "Basic",
+    "username": "svc-migration",
+    "secretValue": "PASSWORD"
+  },
+  "almConfiguration": {
+    "domain": "DEFAULT",
+    "project": "YOUR_PROJECT",
+    "apiVersion": "12.53",
+    "enableSSL": false,
+    "timeout": 120
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 10,
+    "maxConcurrentRequests": 5,
+    "retryAttempts": 5,
+    "retryDelayMs": 2000
+  },
+  "dataOptions": {
+    "includeAttachments": true,
+    "attachmentSizeLimit": 50,
+    "includeHistory": true,
+    "includeBaselines": true,
+    "includeTestRuns": true
+  }
+}</div>
+
+            <h3>Step 2: Configure ALM Octane Connector</h3>
+
+            <p><strong>Generating Octane API Access:</strong></p>
+            <ol>
+                <li>Login to ALM Octane as Shared Space Admin</li>
+                <li>Navigate to <strong>Admin → Spaces → [Your Space] → API Access</strong></li>
+                <li>Click <strong>+ New API Access</strong></li>
+                <li>Fill in details:
+                    <ul>
+                        <li>Name: <code>OpsMigrator Integration</code></li>
+                        <li>Role: <strong>Workspace Admin</strong></li>
+                        <li>Expiration: 90+ days</li>
+                    </ul>
+                </li>
+                <li>Copy <strong>Client ID</strong> and <strong>Client Secret</strong> immediately</li>
+                <li>Test API: <code>POST https://octane.example.com/authentication/sign_in</code></li>
+            </ol>
+
+            <p><strong>Octane Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "ALMOctane",
+  "baseUrl": "https://octane.example.com",
+  "authentication": {
+    "authMethod": "OAuth",
+    "clientId": "YOUR_CLIENT_ID",
+    "clientSecret": "YOUR_CLIENT_SECRET"
+  },
+  "octaneConfiguration": {
+    "sharedSpaceId": "1001",
+    "workspaceId": "1002",
+    "apiVersion": "v15",
+    "enableSafeMode": true
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 50,
+    "maxConcurrentRequests": 10,
+    "retryAttempts": 3,
+    "retryDelayMs": 1000
+  },
+  "transformationOptions": {
+    "defaultAgileMethodology": "scrum",
+    "enableAutomatedTestConversion": true,
+    "preserveTraceability": true,
+    "createBacklogItems": true
+  },
+  "validation": {
+    "strictFieldValidation": true,
+    "validateUsersBeforeMigration": true,
+    "validateReleaseMapping": true
+  }
+}</div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Octane Configuration Critical</h4>
+                <p><strong>Pre-configure Octane workspace</strong> with appropriate phases, lists of values, custom fields, and release structure BEFORE migration. The transformation logic heavily depends on Octane workspace configuration matching your agile process.</p>
+            </div>
+
+            <h3>Step 3: Validate Connections</h3>
+            <div class="code-block"># OpsMigrator CLI validation
+opsmigrator connector validate --source alm-connector.json
+opsmigrator connector validate --target octane-connector.json
+
+# Expected output:
+✓ HP ALM connection successful
+  - Domain: DEFAULT
+  - Project: YOUR_PROJECT  
+  - Requirements: 12,847 accessible
+  - Tests: 8,392 accessible
+  - Defects: 3,204 accessible
+
+✓ ALM Octane connection successful
+  - Shared Space: Enterprise
+  - Workspace: Project Alpha
+  - User mapping: 94% matched
+  - Release mapping: Manual review required</div>
+        </div>
+
+        <div id="transformation" class="section">
+            <h2>3. Waterfall to Agile Transformation</h2>
+
+            <h3>Fundamental Paradigm Shift</h3>
+            <p>This is NOT a simple entity mapping migration. You are transforming how your organization thinks about work:</p>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>Waterfall Concept (ALM)</th>
+                        <th>Agile Concept (Octane)</th>
+                        <th>Transformation Strategy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Requirements Hierarchy</strong><br>(Folder-based, 5+ levels)</td>
+                        <td><strong>Backlog Hierarchy</strong><br>(Theme → Epic → Story)</td>
+                        <td>Flatten structure; promote high-level requirements to Epics, decompose detailed requirements into User Stories with acceptance criteria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Plans</strong><br>(Manual test cases, waterfall phases)</td>
+                        <td><strong>Gherkin Tests</strong><br>(BDD scenarios, continuous testing)</td>
+                        <td>Convert manual test steps to Gherkin Given-When-Then format; link to User Stories for traceability</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Baselines</strong><br>(Point-in-time snapshots)</td>
+                        <td><strong>Releases & Sprints</strong><br>(Iterative delivery cycles)</td>
+                        <td>Map baselines to Release milestones; create sprint structure based on historical delivery cadence</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defects</strong><br>(Discovered in test phase)</td>
+                        <td><strong>Defects</strong><br>(Continuous discovery & resolution)</td>
+                        <td>Preserve defect entity; remap workflow states (New→New, Open→In Progress, Fixed→Done, Closed→Closed)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom Fields</strong><br>(100-300 fields typical)</td>
+                        <td><strong>Focused Fields</strong><br>(Lean agile attributes)</td>
+                        <td><strong>⚠️ MAJOR CHALLENGE:</strong> Consolidate to essential fields; migrate critical custom fields only; document unmigrated fields</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Workflow States</strong><br>(10-15 states, waterfall gates)</td>
+                        <td><strong>Agile Phases</strong><br>(4-6 states, iterative flow)</td>
+                        <td><strong>MANUAL REDESIGN REQUIRED:</strong> Map states to agile phases; may lose state granularity</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Transformation Reality Check</h4>
+                <p><strong>40-60% of this migration requires manual intervention and business decisions.</strong> You cannot automate organizational change. Budget significant time for:</p>
+                <ul>
+                    <li>Stakeholder workshops to define new agile workflows</li>
+                    <li>Training sessions for teams transitioning to agile</li>
+                    <li>Custom field rationalization meetings (which fields to keep/discard)</li>
+                    <li>Test case redesign for BDD/Gherkin format</li>
+                    <li>Release planning to map historical baselines to sprints</li>
+                </ul>
+            </div>
+
+            <h3>Data Volume Impact</h3>
+            <p>Expected transformation overhead:</p>
+            <ul>
+                <li><strong>Requirements:</strong> 10K requirements → 2K Epics + 15K User Stories (expansion factor: 1.7x)</li>
+                <li><strong>Test Cases:</strong> 5K manual tests → 3K Gherkin scenarios (consolidation factor: 0.6x, lossy conversion)</li>
+                <li><strong>Custom Fields:</strong> 150 fields → 25 fields (retention: 17%, document lossy mappings)</li>
+                <li><strong>Workflow States:</strong> 12 states → 5 phases (information loss, historical state approximation)</li>
+            </ul>
+        </div>
+
+        <div id="workflow-redesign" class="section">
+            <h2>4. Workflow Redesign Strategy</h2>
+
+            <h3>Pre-Migration Workflow Analysis</h3>
+            <p>Before technical migration, you MUST redesign workflows collaboratively:</p>
+
+            <div class="info-box">
+                <h4>1. Current State Mapping (Week 1-2)</h4>
+                <ul>
+                    <li>Document all ALM workflow states for Requirements, Tests, Defects</li>
+                    <li>Identify approval gates, sign-offs, compliance checkpoints</li>
+                    <li>Map custom field usage patterns (which fields are actively used vs. legacy)</li>
+                    <li>Analyze historical baselines and release cadence</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>2. Target State Design (Week 3-4)</h4>
+                <ul>
+                    <li>Define Octane workflow phases (e.g., New → In Progress → In Testing → Done)</li>
+                    <li>Determine Epic/Story hierarchy rules (what qualifies as Epic vs. Story)</li>
+                    <li>Select essential custom fields to migrate (typically 15-25 fields)</li>
+                    <li>Design Gherkin test template structure</li>
+                    <li>Define Release and Sprint cadence (2-week sprints typical)</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>3. Mapping Decisions (Week 5-6)</h4>
+                <ul>
+                    <li>Create state-to-phase mapping table (OpsMigrator uses this for transformation)</li>
+                    <li>Define field consolidation rules (e.g., 5 priority fields → 1 priority field)</li>
+                    <li>Determine lossy conversion handling (archive unmigrated data? PDF reports?)</li>
+                    <li>Agree on traceability preservation strategy</li>
+                </ul>
+            </div>
+
+            <h3>OpsMigrator AI-Assisted Workflow Mapping</h3>
+            <p>OpsMigrator's AI engine provides recommendations but requires human validation:</p>
+            <ul>
+                <li><strong>State Mapping Suggestions:</strong> AI analyzes ALM state transitions and suggests Octane phase mappings based on naming patterns and transition logic</li>
+                <li><strong>Field Consolidation Recommendations:</strong> AI identifies redundant custom fields and suggests consolidation strategies</li>
+                <li><strong>Test Conversion Patterns:</strong> AI attempts to convert manual test steps into Gherkin format (60-70% success rate, manual review required)</li>
+                <li><strong>Red Flag Detection:</strong> AI identifies migration blockers (orphaned requirements, circular dependencies, invalid user assignments)</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> AI Limitations</h4>
+                <p>AI cannot make business decisions. It can suggest technical mappings but cannot decide:</p>
+                <ul>
+                    <li>Which custom fields your business needs post-migration</li>
+                    <li>How to handle requirements that don't fit Epic/Story model</li>
+                    <li>Whether to preserve or archive historical baselines</li>
+                    <li>Agile team structure and sprint planning approach</li>
+                </ul>
+                <p><strong>Expect 8-12 collaborative workshops</strong> with stakeholders during transformation design phase.</p>
+            </div>
+        </div>
+
+        <div id="process" class="section">
+            <h2>5. Migration Process (5 Phases)</h2>
+            <p><strong>Total Timeline: 12-18 weeks</strong> including planning, transformation, migration, validation, and stabilization.</p>
+
+            <div class="phase-timeline">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Assessment & Planning</h4>
+                    <p><strong>Duration:</strong> 3-4 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Stakeholder interviews</li>
+                        <li>Current state workflow analysis</li>
+                        <li>Data quality assessment</li>
+                        <li>Agile training needs analysis</li>
+                        <li>Octane workspace pre-configuration</li>
+                        <li><strong>AI Analysis:</strong> 2-3 hours</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Transformation Design</h4>
+                    <p><strong>Duration:</strong> 2-3 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Target state workflow design</li>
+                        <li>Field mapping workshops (8-12 sessions)</li>
+                        <li>Test conversion strategy</li>
+                        <li>Release/Sprint structure definition</li>
+                        <li>Traceability matrix creation</li>
+                        <li><strong>Manual Effort:</strong> High</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Pilot Migration</h4>
+                    <p><strong>Duration:</strong> 3-4 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Migrate 1-2 representative projects (10-20% of data)</li>
+                        <li>Validate transformation logic</li>
+                        <li>User acceptance testing</li>
+                        <li>Refine field mappings based on feedback</li>
+                        <li>Performance tuning</li>
+                        <li><strong>Iteration:</strong> 2-3 cycles typical</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Production Migration</h4>
+                    <p><strong>Duration:</strong> 4-6 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Phased rollout by project/domain</li>
+                        <li>Real-time monitoring and intervention</li>
+                        <li>Parallel operation (ALM read-only, Octane active)</li>
+                        <li>User training during migration window</li>
+                        <li>Defect triage and resolution</li>
+                        <li><strong>Execution:</strong> 80K items/week</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">5</div>
+                    <h4>Validation & Stabilization</h4>
+                    <p><strong>Duration:</strong> 2-3 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Comprehensive validation reports</li>
+                        <li>Traceability verification</li>
+                        <li>User training completion</li>
+                        <li>Hypercare support (2-4 weeks post-migration)</li>
+                        <li>ALM decommissioning planning</li>
+                        <li><strong>Success Criteria:</strong> 75%+ accuracy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4><i class="fas fa-trophy"></i> Success Story</h4>
+                <p><strong>Global Telecom Provider - 18-Week Transformation</strong></p>
+                <ul>
+                    <li><strong>Scale:</strong> 847,000 requirements, 312,000 test cases, 156,000 defects across 12 ALM projects</li>
+                    <li><strong>Challenge:</strong> 287 custom fields, 14 workflow states, 15-year historical data</li>
+                    <li><strong>Result:</strong> Successfully migrated 673,000 items (79.4% of original data) to Octane over 18 weeks</li>
+                    <li><strong>Transformation:</strong> Consolidated to 28 essential fields, redesigned workflows to 5 agile phases</li>
+                    <li><strong>Team:</strong> 2 dedicated consultants, 6 business analysts, 40+ stakeholders across 8 workshops</li>
+                    <li><strong>Outcome:</strong> 23% reduction in cycle time post-migration, 89% user satisfaction after 3-month stabilization</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="red-flags" class="section">
+            <h2>6. Red Flags & Mitigation</h2>
+            <p>OpsMigrator AI automatically detects these critical issues during analysis phase:</p>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Excessive Custom Field Usage</h4>
+                    <span class="flag-severity severity-critical">BLOCKER</span>
+                </div>
+                <p><strong>Detection:</strong> 150+ custom fields identified in ALM project</p>
+                <p><strong>Impact:</strong> Octane supports 50-80 custom fields per entity type. Migration will fail or require significant field consolidation.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Conduct field usage analysis (OpsMigrator provides usage heatmap)</li>
+                    <li>Archive unused fields (fields with &lt;5% population rate)</li>
+                    <li>Consolidate redundant fields (e.g., 5 priority fields → 1 unified priority)</li>
+                    <li>Export unmigrated field data to CSV for historical reference</li>
+                    <li><strong>Budget 2-3 weeks for field rationalization workshops</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Waterfall Workflow Complexity</h4>
+                    <span class="flag-severity severity-critical">BLOCKER</span>
+                </div>
+                <p><strong>Detection:</strong> 10+ workflow states with complex approval gates detected</p>
+                <p><strong>Impact:</strong> Cannot directly map to agile phases (typically 4-6 states). Lossy conversion required.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Design target agile workflow collaboratively (state-to-phase mapping)</li>
+                    <li>Preserve historical state in custom field (e.g., "Original ALM Status")</li>
+                    <li>Approximate intermediate states to closest Octane phase</li>
+                    <li>Document state mapping logic for audit compliance</li>
+                    <li><strong>Expect information loss; acceptance from stakeholders required</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Deep Requirement Hierarchy (6+ levels)</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> Requirement folder structure exceeds Octane's 3-level backlog hierarchy</p>
+                <p><strong>Impact:</strong> Hierarchy flattening required; potential loss of organizational structure.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Promote top 1-2 levels to Themes and Epics</li>
+                    <li>Convert levels 3+ to User Stories with hierarchical naming (e.g., "Module A - Feature B - User Story C")</li>
+                    <li>Preserve original hierarchy path in custom field for reference</li>
+                    <li>Use Octane tags for cross-cutting organizational structure</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Manual Test Cases Without Automation Potential</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> 80%+ of test cases are manual with no scripting or automation hooks</p>
+                <p><strong>Impact:</strong> Gherkin conversion success rate drops to 40-50%; significant manual test redesign needed.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Prioritize critical test paths for Gherkin conversion</li>
+                    <li>Accept lower conversion rate for exploratory/edge case tests</li>
+                    <li>Preserve original manual test steps in custom field</li>
+                    <li>Plan post-migration test modernization project</li>
+                    <li><strong>Budget 4-6 weeks for test case redesign</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Baseline/Release Mapping Ambiguity</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 50+ baselines with irregular cadence and overlapping dates</p>
+                <p><strong>Impact:</strong> Cannot automatically map to Octane's sprint-based release structure.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Conduct release planning workshop to define target sprint structure</li>
+                    <li>Map major baselines to Release milestones</li>
+                    <li>Consolidate minor baselines or archive as historical snapshots</li>
+                    <li>Establish regular sprint cadence post-migration (2-week sprints typical)</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">User Identity Mismatch (Cross-Domain)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 15%+ of ALM users have no matching Octane account</p>
+                <p><strong>Impact:</strong> Assignment and ownership data incomplete post-migration.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Export user mapping report from OpsMigrator</li>
+                    <li>Provision missing Octane accounts before migration (coordinate with IT)</li>
+                    <li>Map retired users to generic "Historical User" account</li>
+                    <li>Preserve original assignee name in custom field for audit trail</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="best-practices" class="section">
+            <h2>7. Best Practices</h2>
+
+            <h3>Before Migration</h3>
+            <ul>
+                <li><strong>Executive Sponsorship:</strong> Secure C-level sponsorship; this is an organizational transformation, not just a technical migration</li>
+                <li><strong>Dedicated Team:</strong> Assign 2+ full-time resources for 4-6 months (don't treat as side project)</li>
+                <li><strong>Change Management Plan:</strong> Develop comprehensive training and communication strategy</li>
+                <li><strong>Data Cleanup:</strong> Archive obsolete ALM projects/requirements before migration (reduces scope by 20-40%)</li>
+                <li><strong>Octane Pre-Configuration:</strong> Configure workflows, custom fields, releases BEFORE migration (reduces rework)</li>
+                <li><strong>Pilot-First Approach:</strong> Always run 2-3 pilot iterations before full migration</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>Phased Rollout:</strong> Migrate 1-2 projects per week to allow for issue resolution</li>
+                <li><strong>Parallel Operation:</strong> Keep ALM in read-only mode for 4-6 weeks during transition</li>
+                <li><strong>War Room Approach:</strong> Daily standups with migration team during production phase</li>
+                <li><strong>Real-Time Monitoring:</strong> Use OpsMigrator's live dashboard to track progress and red flags</li>
+                <li><strong>User Training:</strong> Conduct Octane training sessions concurrently with migration (not after)</li>
+                <li><strong>Document Decisions:</strong> Maintain decision log for all mapping/transformation choices (audit compliance)</li>
+            </ul>
+
+            <h3>After Migration</h3>
+            <ul>
+                <li><strong>Hypercare Period:</strong> Provide 4-6 weeks of intensive support post-migration</li>
+                <li><strong>Validation Sprints:</strong> Run 2-3 sprints in Octane while still having ALM read access for comparison</li>
+                <li><strong>Feedback Loops:</strong> Weekly retrospectives with users to identify pain points</li>
+                <li><strong>Continuous Improvement:</strong> Refine workflows and processes based on real-world usage</li>
+                <li><strong>ALM Archival:</strong> Keep ALM accessible in read-only mode for 6-12 months for compliance/reference</li>
+                <li><strong>Success Metrics:</strong> Measure cycle time, throughput, user satisfaction at 30/60/90 days post-migration</li>
+            </ul>
+        </div>
+
+        <div id="faq" class="section">
+            <h2>8. Frequently Asked Questions</h2>
+
+            <h3>Why is this migration "Critical Complexity"?</h3>
+            <p>This is the only migration scenario classified as Critical because it involves fundamental paradigm shift from waterfall to agile. You're not just moving data—you're transforming how your organization works. Expect 40-60% manual intervention, extensive stakeholder workshops, and organizational change management. Success rate is 78.3% (lowest of all scenarios) due to complexity.</p>
+
+            <h3>Can I automate the waterfall-to-agile transformation?</h3>
+            <p>No. OpsMigrator AI can provide recommendations, suggest field mappings, and convert some test cases automatically, but it cannot make business decisions about workflows, field rationalization, or agile process design. Budget 8-12 collaborative workshops with stakeholders for transformation design.</p>
+
+            <h3>What happens to custom fields that don't fit in Octane?</h3>
+            <p>OpsMigrator exports unmigrated field data to CSV/Excel for historical reference. You'll need to consolidate 150+ ALM custom fields down to 20-30 essential fields for Octane. Document the rationalization decisions for audit compliance and user training.</p>
+
+            <h3>How long does ALM need to be offline?</h3>
+            <p>ALM does NOT need to be offline. Recommended approach: freeze ALM (read-only mode), migrate data, run parallel for 4-6 weeks while users transition, then decommission ALM. Zero downtime for read access; 1-2 week blackout for write operations during cutover.</p>
+
+            <h3>What is the expected success rate for test case conversion?</h3>
+            <p>Manual test cases convert to Gherkin format at 60-70% success rate with AI assistance. Remaining 30-40% require manual redesign. Tests with vague steps, UI automation, or exploratory testing have lower conversion success. Budget 4-6 weeks for test case redesign.</p>
+
+            <h3>Can I roll back if migration fails?</h3>
+            <p>Yes, but costly. ALM remains untouched during migration. If critical issues arise, halt Octane migration, analyze failures, fix transformation logic, and retry. Rolling back after full production cutover is organizationally disruptive (users trained on Octane, processes changed). Pilot phase is critical to derisk.</p>
+
+            <h3>Do I need external consultants?</h3>
+            <p><strong>Yes, strongly recommended.</strong> This is the most complex migration scenario. Budget for 2 dedicated consultants for 4-6 months: 1 technical consultant (OpsMigrator expert), 1 agile transformation consultant (organizational change). In-house teams rarely have experience with both technical migration AND waterfall-to-agile transformation.</p>
+
+            <h3>What are typical costs for this migration?</h3>
+            <p>Costs vary significantly based on data volume and organizational complexity:</p>
+            <ul>
+                <li><strong>Small (50K-200K items):</strong> $150K-$300K (3-4 months, 2 consultants, OpsMigrator license)</li>
+                <li><strong>Medium (200K-500K items):</strong> $300K-$600K (4-5 months, 3-4 consultants, training program)</li>
+                <li><strong>Large (500K-1M+ items):</strong> $600K-$1.2M+ (6+ months, 5-8 consultants, extensive change management)</li>
+            </ul>
+            <p>Costs include: OpsMigrator license, consultant fees, stakeholder time (workshops), training development, hypercare support. This is 3-5x more expensive than simple lift-and-shift migrations.</p>
+        </div>
+
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Need Expert Guidance?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                This migration requires dedicated consulting engagement. Our team has successfully completed 12+ ALM to Octane transformations. 
+                Schedule a consultation to discuss your specific requirements.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#demo" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Consultation
+                </a>
+                <a href="mailto:admin@opsmigrator.in" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Expert Team
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-lightest); text-align: center;">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Documentation Hub
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">All Guides</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                        <li><a href="versionone-to-ado.html">VersionOne → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

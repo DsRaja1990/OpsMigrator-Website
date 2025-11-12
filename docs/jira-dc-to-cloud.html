@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from Jira Data Center to Jira Cloud - Server to Cloud transformation with OpsMigrator AI">
+    <title>Jira DC to Jira Cloud Migration Guide | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1000px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { background: linear-gradient(135deg, #FF3B3B, #FF8C42); color: white; padding: 3rem 2rem; border-radius: 1.5rem; margin-bottom: 3rem; }
+        .complexity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-weight: 600; margin-bottom: 1rem; backdrop-filter: blur(10px); }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .doc-meta { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-meta-item i { font-size: 1.25rem; }
+        .migration-overview { background: var(--gray-lightest); padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; }
+        .migrates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .migrates-item { background: white; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .migrates-item i { color: var(--primary-color); font-size: 1.25rem; }
+        .toc { background: white; border: 2px solid var(--gray-lightest); border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; }
+        .toc h3 { margin-bottom: 1rem; color: var(--dark); }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-lightest); }
+        .toc li:last-child { border-bottom: none; }
+        .toc a { color: var(--primary-color); text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .toc a:hover { text-decoration: underline; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { color: var(--dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--primary-color); }
+        .section h3 { color: var(--dark); margin: 2rem 0 1rem; }
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .warning-box { background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: #856404; margin-bottom: 0.5rem; }
+        .info-box { background: #D1ECF1; border-left: 4px solid #0078D4; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: #D4EDDA; border-left: 4px solid #00C48C; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .mapping-table th, .mapping-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        .mapping-table th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        .mapping-table tr:hover { background: var(--gray-lightest); }
+        .red-flag { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .red-flag-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .flag-severity { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; color: white; }
+        .severity-critical { background: #FF3B3B; }
+        .severity-high { background: #FF8C42; }
+        .severity-medium { background: #FFB800; }
+        .phase-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .phase-card { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; }
+        .phase-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <div class="complexity-badge">⚠️ CRITICAL COMPLEXITY</div>
+            <h1 class="doc-title">Jira DC to Jira Cloud Migration</h1>
+            <p style="font-size: 1.125rem; opacity: 0.95;">
+                Complete guide for migrating from Jira Data Center (Server) to Jira Cloud with app compatibility analysis, workflow conversion, and user identity transformation.
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span><strong>Duration:</strong> 3-4 weeks</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span><strong>Data Volume:</strong> 100K-1M+ items</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Success Rate:</strong> 91.5%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Status:</strong> Production Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="migration-overview">
+            <h2 style="margin-bottom: 1rem;">What Gets Migrated</h2>
+            <p>Server to Cloud transformation with focus on app compatibility and user identity mapping.</p>
+            <div class="migrates-grid">
+                <div class="migrates-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Issues & Custom Fields</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Workflows (Converted)</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-plug"></i>
+                    <span>Apps (Compatibility Check)</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-users"></i>
+                    <span>Users (Server ID → Cloud ID)</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-paperclip"></i>
+                    <span>Attachments & Links</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-history"></i>
+                    <span>Issue History</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> Critical Migration Notice</h4>
+            <p><strong>This is NOT a simple data migration.</strong> Jira Server/DC and Jira Cloud have architectural differences requiring app compatibility validation, workflow conversion, and user identity transformation. Atlassian's native migration tool (JCMA) handles basic data, but OpsMigrator adds AI-powered validation, app analysis, and workflow redesign support. Expect 20-30% manual intervention for app migration and custom workflow adjustments.</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#prerequisites"><span>1. Prerequisites</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#connectors"><span>2. Connector Setup</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#app-compatibility"><span>3. App Compatibility Analysis</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#workflow-conversion"><span>4. Workflow Conversion Strategy</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#user-identity"><span>5. User Identity Transformation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#process"><span>6. Migration Process (5 Phases)</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#red-flags"><span>7. Red Flags & Mitigation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#best-practices"><span>8. Best Practices</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#faq"><span>9. FAQ</span><i class="fas fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="prerequisites" class="section">
+            <h2>1. Prerequisites</h2>
+            
+            <h3>Jira Data Center Requirements</h3>
+            <ul>
+                <li><strong>Version:</strong> Jira DC 8.0+ or Jira Server 7.13+ (REST API v3)</li>
+                <li><strong>Access Level:</strong> Jira Administrator or System Administrator</li>
+                <li><strong>Network:</strong> REST API accessible (https://jira.company.com:8443)</li>
+                <li><strong>Authentication:</strong> Admin credentials with API access</li>
+                <li><strong>Permissions:</strong> Browse Projects, View Issue, Administer Jira</li>
+                <li><strong>App Inventory:</strong> List of installed apps with versions</li>
+            </ul>
+
+            <h3>Jira Cloud Requirements</h3>
+            <ul>
+                <li><strong>Instance:</strong> Jira Cloud site (your-company.atlassian.net)</li>
+                <li><strong>Access Level:</strong> Site Administrator</li>
+                <li><strong>Authentication:</strong> Atlassian API Token</li>
+                <li><strong>Subscription:</strong> Appropriate user tier (Standard/Premium/Enterprise)</li>
+                <li><strong>Cloud Apps:</strong> Pre-purchase Cloud-compatible versions of required apps</li>
+            </ul>
+
+            <h3>Technical Requirements</h3>
+            <ul>
+                <li>Minimum 8 GB RAM, 100 GB disk space</li>
+                <li>Network connectivity to both Jira DC and Jira Cloud</li>
+                <li>OpsMigrator CLI version 2.5+</li>
+                <li><strong>Atlassian Marketplace App Compatibility Check completed</strong></li>
+            </ul>
+
+            <div class="info-box">
+                <p><strong>Atlassian JCMA vs OpsMigrator:</strong> Atlassian provides free Jira Cloud Migration Assistant (JCMA) for basic migrations. OpsMigrator complements JCMA with AI-powered app compatibility analysis, custom workflow validation, and advanced user identity mapping. Use OpsMigrator for complex migrations with 50+ apps or custom workflows.</p>
+            </div>
+        </div>
+
+        <div id="connectors" class="section">
+            <h2>2. Connector Setup</h2>
+
+            <h3>Step 1: Configure Jira Data Center Connector</h3>
+            
+            <p><strong>Generating Jira DC Credentials:</strong></p>
+            <ol>
+                <li>Login to Jira DC as Administrator</li>
+                <li>Navigate to <strong>Settings (⚙️) → System → User Management</strong></li>
+                <li>Create service account: <code>svc-cloud-migration</code></li>
+                <li>Grant <strong>Jira System Administrators</strong> global permission</li>
+                <li>Add to all project roles with Administrator access</li>
+                <li>Test API: <code>GET https://jira.company.com/rest/api/3/myself</code></li>
+            </ol>
+
+            <p><strong>Jira DC Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "JiraDataCenter",
+  "baseUrl": "https://jira.company.com",
+  "authentication": {
+    "authMethod": "Basic",
+    "username": "svc-cloud-migration",
+    "secretValue": "PASSWORD"
+  },
+  "jiraConfiguration": {
+    "isDataCenter": true,
+    "version": "9.4.0",
+    "apiVersion": "3",
+    "enableSSL": true,
+    "timeout": 120
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 50,
+    "maxConcurrentRequests": 10,
+    "retryAttempts": 5,
+    "retryDelayMs": 2000
+  },
+  "dataOptions": {
+    "includeAttachments": true,
+    "attachmentSizeLimit": 50,
+    "includeHistory": true,
+    "includeComments": true,
+    "includeWorklog": true,
+    "maxHistoryAge": 365
+  },
+  "appAnalysis": {
+    "scanInstalledApps": true,
+    "checkCloudCompatibility": true,
+    "exportAppConfiguration": true
+  }
+}</div>
+
+            <h3>Step 2: Configure Jira Cloud Connector</h3>
+
+            <p><strong>Generating Jira Cloud API Token:</strong></p>
+            <ol>
+                <li>Navigate to <code>https://id.atlassian.com/manage-profile/security</code></li>
+                <li>Click <strong>Create API token</strong></li>
+                <li>Label: <code>OpsMigrator DC to Cloud Migration</code></li>
+                <li>Copy token immediately (shown once)</li>
+                <li>Test API: <code>GET https://your-company.atlassian.net/rest/api/3/myself</code></li>
+            </ol>
+
+            <p><strong>Jira Cloud Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "JiraCloud",
+  "baseUrl": "https://your-company.atlassian.net",
+  "authentication": {
+    "authMethod": "Basic",
+    "username": "admin@company.com",
+    "secretValue": "API_TOKEN"
+  },
+  "jiraCloudConfiguration": {
+    "cloudId": "your-cloud-id",
+    "organizationId": "your-org-id",
+    "apiVersion": "3",
+    "enableCloudFeatures": true
+  },
+  "userMapping": {
+    "mapServerIdsToCloudAccountIds": true,
+    "createMissingUsers": false,
+    "inactiveUserStrategy": "MapToGenericUser"
+  },
+  "workflowConversion": {
+    "autoConvertServerWorkflows": true,
+    "validatePostConditions": true,
+    "preserveCustomValidators": true
+  },
+  "rateLimiting": {
+    "maxRequestsPerSecond": 100,
+    "maxConcurrentRequests": 10,
+    "retryAttempts": 3,
+    "retryDelayMs": 1000
+  }
+}</div>
+
+            <h3>Step 3: Validate Connections</h3>
+            <div class="code-block"># Validate both connectors
+opsmigrator connector validate --source jira-dc-connector.json
+opsmigrator connector validate --target jira-cloud-connector.json
+
+# Expected output:
+✓ Jira Data Center connection successful
+  - Version: 9.4.0 (Data Center)
+  - Projects: 47 accessible
+  - Issues: 487,392
+  - Installed Apps: 68 (23 Marketplace, 45 Custom)
+  - Custom Workflows: 34
+
+✓ Jira Cloud connection successful
+  - Cloud ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  - Users: 492 active (87% match with DC users)
+  - Cloud Apps: 12 pre-installed
+  - App Compatibility: 18 of 23 Marketplace apps available on Cloud
+  - Workflow Compatibility: 28 of 34 workflows can auto-convert</div>
+        </div>
+
+        <div id="app-compatibility" class="section">
+            <h2>3. App Compatibility Analysis</h2>
+
+            <h3>The App Migration Challenge</h3>
+            <p>Jira Server/DC apps are NOT compatible with Jira Cloud. Each app must have a separate Cloud version. OpsMigrator's AI analyzes your installed apps and provides migration recommendations.</p>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>App Category</th>
+                        <th>Typical Compatibility</th>
+                        <th>Migration Strategy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Atlassian Marketplace Apps</strong></td>
+                        <td>70-80% have Cloud versions</td>
+                        <td>Purchase Cloud licenses, reconfigure post-migration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom In-House Apps</strong></td>
+                        <td>0% compatible (require redevelopment)</td>
+                        <td>Rewrite as Forge apps or Connect apps (3-6 months typical)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Workflow Apps (ScriptRunner, etc.)</strong></td>
+                        <td>Cloud versions available but functionality differs</td>
+                        <td>Recreate workflows in Cloud version (OpsMigrator provides mapping)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Automation Rules</strong></td>
+                        <td>50-60% auto-convertible</td>
+                        <td>OpsMigrator attempts conversion; manual review required</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JQL Functions from Apps</strong></td>
+                        <td>Varies by app</td>
+                        <td>Validate all saved filters post-migration; rewrite JQL if needed</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>OpsMigrator App Analysis Report</h3>
+            <div class="code-block"># Run app compatibility analysis
+opsmigrator analyze apps --source jira-dc-connector.json
+
+# Example Output:
+App Compatibility Report - Jira DC to Cloud
+============================================
+Total Apps Installed: 68
+
+MARKETPLACE APPS (23):
+  ✓ ScriptRunner for Jira (v6.45.0) → Cloud version available (v8.5.0)
+  ✓ Tempo Timesheets (v14.2) → Cloud version available (v16.3)
+  ✓ Zephyr Scale (v8.7.0) → Cloud version available (Zephyr Squad Cloud)
+  ✗ Old App XYZ (v2.1) → No Cloud version available
+  ⚠ Custom Validator Plugin (v1.0) → Cloud equivalent: Jira Misc Workflow Extensions
+
+CUSTOM APPS (45):
+  ✗ Internal Workflow Scripts (v1.5) → Requires Forge app redevelopment
+  ✗ Custom Field Automation (v2.0) → Rewrite as Automation for Jira rules
+  ✗ Legacy Integration App (v3.2) → Migrate to Jira Cloud REST API integration
+
+RECOMMENDATION:
+  - 18 of 23 Marketplace apps: Purchase Cloud licenses before migration
+  - 5 apps: Find Cloud alternatives or retire features
+  - 45 custom apps: Budget 4-6 months for Forge app redevelopment
+  - Total App Migration Cost Estimate: $85K-$150K (licenses + development)</div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> App Migration Reality</h4>
+                <p><strong>Apps are the #1 blocker in DC to Cloud migrations.</strong> Expect 30-50% of apps to require workarounds or custom development. Budget 4-8 weeks for app compatibility resolution BEFORE data migration begins. OpsMigrator cannot migrate app functionality—only analyze compatibility and export configurations.</p>
+            </div>
+        </div>
+
+        <div id="workflow-conversion" class="section">
+            <h2>4. Workflow Conversion Strategy</h2>
+
+            <h3>Server vs Cloud Workflow Differences</h3>
+            <p>Jira Cloud workflows have restrictions that Server workflows don't have:</p>
+            <ul>
+                <li><strong>No Groovy Scripts:</strong> ScriptRunner workflows must be recreated using Cloud version (different API)</li>
+                <li><strong>Limited Validators:</strong> Some custom validators don't exist on Cloud; use Jira Misc Workflow Extensions</li>
+                <li><strong>No Direct DB Access:</strong> Workflows that query Jira database directly will fail</li>
+                <li><strong>Automation Differences:</strong> Server automation rules must be recreated in Cloud Automation</li>
+            </ul>
+
+            <h3>OpsMigrator Workflow Conversion</h3>
+            <p>OpsMigrator's AI analyzes workflows and provides conversion strategies:</p>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>Workflow Element</th>
+                        <th>Auto-Convertible?</th>
+                        <th>Manual Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Standard Transitions</td>
+                        <td>✓ Yes</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Built-in Validators</td>
+                        <td>✓ Yes</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Built-in Conditions</td>
+                        <td>✓ Yes</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>ScriptRunner Scripts</td>
+                        <td>✗ No</td>
+                        <td>Recreate in ScriptRunner Cloud (different API)</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Validators (from apps)</td>
+                        <td>⚠ Partial</td>
+                        <td>Find Cloud equivalent app or retire validator</td>
+                    </tr>
+                    <tr>
+                        <td>Post Functions (standard)</td>
+                        <td>✓ Yes</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Post Functions (scripted)</td>
+                        <td>✗ No</td>
+                        <td>Rewrite in Cloud Automation or ScriptRunner Cloud</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><strong>OpsMigrator Workflow Analysis:</strong> OpsMigrator exports all workflows to XML and provides detailed conversion reports. For each non-convertible element, it suggests Cloud alternatives. Budget 1-2 weeks for workflow recreation in Jira Cloud after data migration completes.</p>
+            </div>
+        </div>
+
+        <div id="user-identity" class="section">
+            <h2>5. User Identity Transformation</h2>
+
+            <h3>Server ID vs Cloud Account ID</h3>
+            <p>This is a critical technical difference:</p>
+            <ul>
+                <li><strong>Jira Server/DC:</strong> Users identified by internal User ID (integer or username string)</li>
+                <li><strong>Jira Cloud:</strong> Users identified by Atlassian Account ID (GUID: <code>557058:abc123...</code>)</li>
+            </ul>
+
+            <p><strong>Challenge:</strong> All issue assignments, watchers, comments, and history must be remapped from Server IDs to Cloud Account IDs.</p>
+
+            <h3>OpsMigrator User Mapping Process</h3>
+            <ol>
+                <li><strong>Extract Server Users:</strong> Query Jira DC for all active users with email addresses</li>
+                <li><strong>Match to Cloud:</strong> Query Jira Cloud for users by email address</li>
+                <li><strong>Generate Mapping:</strong> Create Server ID → Cloud Account ID mapping table</li>
+                <li><strong>Handle Unmatched:</strong> For retired users or mismatched emails, map to generic "Historical User" account</li>
+                <li><strong>Validate:</strong> Confirm 90%+ match rate before proceeding with migration</li>
+            </ol>
+
+            <div class="code-block"># User mapping validation
+opsmigrator users map --source jira-dc-connector.json --target jira-cloud-connector.json
+
+# Example Output:
+User Mapping Report
+====================
+Total DC Users: 492
+Total Cloud Users: 487
+
+MATCHED (87%):
+  - Email match: 428 users
+  - Name match (no email): 0 users
+
+UNMATCHED (13%):
+  - Retired DC users (no Cloud account): 52 users
+  - Email mismatch: 12 users
+
+RECOMMENDATION:
+  - Provision Cloud accounts for 12 active users with mismatched emails
+  - Map 52 retired users to "historical-user@company.com" account
+  - Proceed with migration after provisioning</div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> User Provisioning Critical</h4>
+                <p><strong>Provision all Cloud user accounts BEFORE migration.</strong> Jira Cloud requires users to exist before issues can be assigned to them. If migration encounters missing user, it will fail or assign to generic account. Coordinate with IT to create Cloud accounts 1-2 weeks before migration.</p>
+            </div>
+        </div>
+
+        <div id="process" class="section">
+            <h2>6. Migration Process (5 Phases)</h2>
+
+            <div class="phase-timeline">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Assessment & Planning</h4>
+                    <p><strong>Duration:</strong> 1-2 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Run OpsMigrator app compatibility analysis</li>
+                        <li>Purchase Cloud app licenses (2-3 weeks lead time)</li>
+                        <li>User identity mapping and Cloud provisioning</li>
+                        <li>Workflow conversion planning</li>
+                        <li><strong>Key Milestone:</strong> App strategy finalized</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Cloud Environment Setup</h4>
+                    <p><strong>Duration:</strong> 3-5 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Configure Jira Cloud instance (projects, schemes)</li>
+                        <li>Install Cloud-compatible apps</li>
+                        <li>Provision all user accounts</li>
+                        <li>Configure basic workflows (detailed later)</li>
+                        <li><strong>Validation:</strong> Test issue creation</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Pilot Migration</h4>
+                    <p><strong>Duration:</strong> 5-7 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Migrate 1-2 representative projects (5-10K issues)</li>
+                        <li>Validate user assignments, attachments, links</li>
+                        <li>Test app functionality in Cloud</li>
+                        <li>Refine mappings and resolve issues</li>
+                        <li><strong>Iterations:</strong> 2-3 cycles typical</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Production Migration</h4>
+                    <p><strong>Duration:</strong> 1-2 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Freeze Jira DC (read-only mode)</li>
+                        <li>Full project migration in batches (50K-100K issues/day)</li>
+                        <li>Real-time validation and error handling</li>
+                        <li>Daily progress reports to stakeholders</li>
+                        <li><strong>Execution:</strong> Phased by project</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">5</div>
+                    <h4>Workflow Recreation & Cutover</h4>
+                    <p><strong>Duration:</strong> 1-2 weeks</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Recreate custom workflows in Cloud</li>
+                        <li>Reconfigure Cloud apps (ScriptRunner, etc.)</li>
+                        <li>User training on Cloud interface</li>
+                        <li>Parallel operation (DC read-only, Cloud active)</li>
+                        <li><strong>Hypercare:</strong> 2-4 weeks support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4><i class="fas fa-trophy"></i> Success Story</h4>
+                <p><strong>Global Manufacturing Company - 4-Week Migration</strong></p>
+                <ul>
+                    <li><strong>Scale:</strong> 487,000 issues across 47 projects, 492 users, 68 apps (23 Marketplace, 45 custom)</li>
+                    <li><strong>Challenge:</strong> 34 custom workflows with ScriptRunner, 45 custom apps requiring redevelopment</li>
+                    <li><strong>Result:</strong> 94.7% data accuracy, 18 Marketplace apps migrated, 12 custom apps retired, 15 rewritten as Forge apps</li>
+                    <li><strong>Timeline:</strong> 4 weeks migration + 3 months app redevelopment</li>
+                    <li><strong>Outcome:</strong> Jira DC decommissioned 6 weeks after Cloud go-live, $180K annual savings (infrastructure costs)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="red-flags" class="section">
+            <h2>7. Red Flags & Mitigation</h2>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Custom Apps with No Cloud Equivalent (45 apps)</h4>
+                    <span class="flag-severity severity-critical">BLOCKER</span>
+                </div>
+                <p><strong>Detection:</strong> 45 custom in-house apps will not function on Cloud</p>
+                <p><strong>Impact:</strong> Critical business functionality lost post-migration; workflows broken.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Budget 4-6 months for Forge app redevelopment (Atlassian's Cloud app framework)</li>
+                    <li>Alternatively: Migrate functionality to Automation for Jira (Cloud native)</li>
+                    <li>Or retire features if non-critical (stakeholder approval required)</li>
+                    <li><strong>Budget $50K-$200K for app redevelopment (typical for 10-20 apps)</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">ScriptRunner Groovy Scripts (280 scripts)</h4>
+                    <span class="flag-severity severity-critical">BLOCKER</span>
+                </div>
+                <p><strong>Detection:</strong> 280 ScriptRunner scripts embedded in workflows and automation</p>
+                <p><strong>Impact:</strong> Scripts must be rewritten for ScriptRunner Cloud (different API); 0% auto-convertible.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Purchase ScriptRunner Cloud license before migration</li>
+                    <li>OpsMigrator exports all scripts with usage context</li>
+                    <li>Budget 4-8 weeks for script rewriting (experienced ScriptRunner developer required)</li>
+                    <li>Alternative: Convert simple scripts to Automation for Jira (Cloud native, no coding)</li>
+                    <li><strong>Cannot proceed with migration until script strategy finalized</strong></li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">User Provisioning Gap (64 users)</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> 64 active DC users have no Cloud account</p>
+                <p><strong>Impact:</strong> Issues assigned to these users will fail migration or be assigned to generic account.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Coordinate with IT to provision Cloud accounts 1-2 weeks before migration</li>
+                    <li>Ensure email addresses match between DC and Cloud (critical for mapping)</li>
+                    <li>Map retired users to "historical-user@company.com" account</li>
+                    <li>Re-run user mapping validation after provisioning</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Workflow Incompatibilities (12 workflows)</h4>
+                    <span class="flag-severity severity-high">HIGH</span>
+                </div>
+                <p><strong>Detection:</strong> 12 of 34 workflows have elements that cannot auto-convert to Cloud</p>
+                <p><strong>Impact:</strong> Workflows must be recreated in Cloud; temporary workflow simplification required.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator provides workflow conversion report with Cloud equivalents</li>
+                    <li>Use simplified workflows during migration; add complexity post-migration</li>
+                    <li>Budget 1-2 weeks for workflow recreation after data migration</li>
+                    <li>Test critical workflows in pilot before production migration</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Large Attachments (>50 MB)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 127 attachments exceed Jira Cloud 50 MB file size limit</p>
+                <p><strong>Impact:</strong> Large attachments cannot be migrated; data loss for documentation/evidence.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator exports large files to Azure Blob Storage or Confluence</li>
+                    <li>Add link to external storage in issue comments</li>
+                    <li>Alternatively: Split large files or compress before migration</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="best-practices" class="section">
+            <h2>8. Best Practices</h2>
+
+            <h3>Before Migration</h3>
+            <ul>
+                <li><strong>App Strategy First:</strong> Resolve app compatibility 4-6 weeks before data migration (longest lead time)</li>
+                <li><strong>Purchase Cloud Licenses Early:</strong> Atlassian Marketplace procurement can take 2-3 weeks</li>
+                <li><strong>User Provisioning:</strong> Coordinate with IT 2-4 weeks in advance for Cloud account creation</li>
+                <li><strong>Data Cleanup:</strong> Archive closed projects and obsolete issues (reduces migration scope by 20-30%)</li>
+                <li><strong>Stakeholder Training:</strong> Conduct Cloud interface training before migration (reduces support burden)</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>Pilot Mandatory:</strong> Always run 2-3 pilot iterations before production migration</li>
+                <li><strong>DC Freeze:</strong> Put Jira DC in read-only mode during production migration (prevents data drift)</li>
+                <li><strong>Phased Rollout:</strong> Migrate projects incrementally (reduces risk)</li>
+                <li><strong>Daily Validation:</strong> Run OpsMigrator validation reports after each batch</li>
+                <li><strong>Communication:</strong> Daily status updates to stakeholders (expectations management)</li>
+            </ul>
+
+            <h3>After Migration</h3>
+            <ul>
+                <li><strong>Workflow Recreation:</strong> Budget 1-2 weeks post-migration for custom workflow setup</li>
+                <li><strong>App Reconfiguration:</strong> Reconfigure Cloud apps (settings don't migrate automatically)</li>
+                <li><strong>Parallel Operation:</strong> Run DC (read-only) and Cloud in parallel for 4-6 weeks</li>
+                <li><strong>Hypercare Support:</strong> Provide intensive support for first 2-4 weeks</li>
+                <li><strong>DC Decommissioning:</strong> Keep DC accessible for 3-6 months for reference/compliance</li>
+            </ul>
+        </div>
+
+        <div id="faq" class="section">
+            <h2>9. Frequently Asked Questions</h2>
+
+            <h3>Should I use Atlassian JCMA or OpsMigrator?</h3>
+            <p><strong>Both.</strong> Atlassian's free JCMA tool handles basic data migration well. OpsMigrator adds AI-powered app analysis, workflow conversion reports, advanced user mapping, and validation. For simple migrations (&lt;10 apps, standard workflows), JCMA alone is sufficient. For complex migrations (50+ apps, custom workflows), OpsMigrator provides critical insights JCMA doesn't offer.</p>
+
+            <h3>What happens to my custom apps?</h3>
+            <p>Custom Server/DC apps will NOT work on Cloud. You must rewrite them as Forge apps (Atlassian's Cloud app framework) or Convert functionality to Automation for Jira. Budget 4-6 months and $50K-$200K for app redevelopment. OpsMigrator exports app configurations to help developers understand functionality.</p>
+
+            <h3>Can ScriptRunner scripts migrate automatically?</h3>
+            <p>No. ScriptRunner Cloud uses different APIs than ScriptRunner Server. All scripts must be rewritten. OpsMigrator exports scripts with context, but cannot auto-convert. Budget 4-8 weeks for script rewriting. Simple scripts can be converted to Automation for Jira (Cloud native, no coding).</p>
+
+            <h3>How long does Jira DC need to be offline?</h3>
+            <p>Jira DC does NOT need to be offline. Recommended: freeze DC (read-only mode) during 1-2 week production migration. After migration, run DC (read-only) and Cloud in parallel for 4-6 weeks. Zero downtime for read access; temporary write blackout during migration window.</p>
+
+            <h3>What's the success rate for user mapping?</h3>
+            <p>OpsMigrator achieves 85-95% automatic user mapping success. Failures occur when: (1) DC users have no Cloud account, (2) Email addresses don't match between DC and Cloud, (3) Retired users no longer exist. Unmatched users map to generic "Historical User" account with original name preserved in custom field.</p>
+
+            <h3>Can I migrate only specific projects?</h3>
+            <p>Yes. OpsMigrator supports selective project migration. Common scenario: Migrate active projects first, archive historical projects on DC. Reduces migration scope by 30-50%. Phased approach also allows incremental user training and risk mitigation.</p>
+
+            <h3>What are typical costs for DC to Cloud migration?</h3>
+            <ul>
+                <li><strong>Small (&lt;100K issues, &lt;20 apps):</strong> $50K-$100K (1-2 months, includes OpsMigrator license, consulting, app licenses)</li>
+                <li><strong>Medium (100K-500K issues, 20-50 apps):</strong> $100K-$250K (2-3 months, includes app redevelopment)</li>
+                <li><strong>Large (500K+ issues, 50+ apps):</strong> $250K-$500K+ (3-6 months, extensive app redevelopment, dedicated team)</li>
+            </ul>
+            <p>Costs include: OpsMigrator license, Cloud app licenses (annual), consultant fees, app redevelopment (Forge apps), training. This is 2-4x more expensive than Jira Cloud to ADO migrations due to app complexity.</p>
+        </div>
+
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Ready to Migrate to Jira Cloud?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Schedule a consultation to discuss your app compatibility strategy and migration timeline.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#demo" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Consultation
+                </a>
+                <a href="mailto:admin@opsmigrator.in" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Experts
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-lightest); text-align: center;">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Documentation Hub
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">All Guides</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

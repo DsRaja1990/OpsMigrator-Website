@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from Bitbucket to GitHub - Repository migration, PR conversion, and fastest migration path with OpsMigrator AI">
+    <title>Bitbucket to GitHub Migration Guide | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1000px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { background: linear-gradient(135deg, #00C48C, #0078D4); color: white; padding: 3rem 2rem; border-radius: 1.5rem; margin-bottom: 3rem; }
+        .complexity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-weight: 600; margin-bottom: 1rem; backdrop-filter: blur(10px); }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .doc-meta { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-meta-item i { font-size: 1.25rem; }
+        .migration-overview { background: var(--gray-lightest); padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; }
+        .migrates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .migrates-item { background: white; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .migrates-item i { color: var(--primary-color); font-size: 1.25rem; }
+        .toc { background: white; border: 2px solid var(--gray-lightest); border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; }
+        .toc h3 { margin-bottom: 1rem; color: var(--dark); }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-lightest); }
+        .toc li:last-child { border-bottom: none; }
+        .toc a { color: var(--primary-color); text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .toc a:hover { text-decoration: underline; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { color: var(--dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--primary-color); }
+        .section h3 { color: var(--dark); margin: 2rem 0 1rem; }
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .warning-box { background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: #856404; margin-bottom: 0.5rem; }
+        .info-box { background: #D1ECF1; border-left: 4px solid #0078D4; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: #D4EDDA; border-left: 4px solid #00C48C; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .mapping-table th, .mapping-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        .mapping-table th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        .mapping-table tr:hover { background: var(--gray-lightest); }
+        .red-flag { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .red-flag-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .flag-severity { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; color: white; }
+        .severity-medium { background: #FFB800; }
+        .severity-low { background: #00C48C; }
+        .phase-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .phase-card { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; }
+        .phase-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <div class="complexity-badge">🟢 LOW COMPLEXITY - FASTEST PATH</div>
+            <h1 class="doc-title">Bitbucket to GitHub Migration</h1>
+            <p style="font-size: 1.125rem; opacity: 0.95;">
+                Straightforward repository migration from Bitbucket to GitHub with full Git history, branch preservation, and pull request conversion in 3-5 days.
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span><strong>Duration:</strong> 3-5 days</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span><strong>Data Volume:</strong> 10-100 repositories</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Success Rate:</strong> 99.4%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Status:</strong> Production Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="migration-overview">
+            <h2 style="margin-bottom: 1rem;">What Gets Migrated</h2>
+            <p>Repository-focused migration preserving complete Git history, branches, tags, and pull requests.</p>
+            <div class="migrates-grid">
+                <div class="migrates-item">
+                    <i class="fab fa-git-alt"></i>
+                    <span>Git Repositories</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-code-branch"></i>
+                    <span>Branches & Tags</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-code-merge"></i>
+                    <span>Pull Requests</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Branch Protection Rules</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-users"></i>
+                    <span>Users & Permissions</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-robot"></i>
+                    <span>Webhooks</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Why This is the Simplest Migration:</strong> Repository migration is Git-native operation (no data transformation). Bitbucket and GitHub both use Git, so commit history, branches, and tags migrate perfectly via <code>git clone --mirror</code> + <code>git push --mirror</code>. Only pull requests, branch policies, and webhooks require OpsMigrator for conversion.</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#prerequisites"><span>1. Prerequisites</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#connectors"><span>2. Connector Setup</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#process"><span>3. Migration Process (4 Phases)</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#pr-conversion"><span>4. Pull Request Conversion</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#red-flags"><span>5. Red Flags & Mitigation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#best-practices"><span>6. Best Practices</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#faq"><span>7. FAQ</span><i class="fas fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="prerequisites" class="section">
+            <h2>1. Prerequisites</h2>
+            
+            <h3>Bitbucket Requirements</h3>
+            <ul>
+                <li><strong>Access Level:</strong> Admin access to repositories (Bitbucket Cloud or Server/DC)</li>
+                <li><strong>Authentication:</strong> App Password (Cloud) or Personal Access Token (Server/DC)</li>
+                <li><strong>API Access:</strong> Bitbucket REST API 2.0</li>
+                <li><strong>Permissions:</strong> Repository admin, PR read access</li>
+            </ul>
+
+            <h3>GitHub Requirements</h3>
+            <ul>
+                <li><strong>Organization:</strong> GitHub organization or personal account</li>
+                <li><strong>Authentication:</strong> Personal Access Token (classic) with full repo scope</li>
+                <li><strong>Permissions:</strong> Create repositories, manage settings, admin access</li>
+                <li><strong>API Access:</strong> GitHub REST API v3</li>
+            </ul>
+
+            <h3>Technical Requirements</h3>
+            <ul>
+                <li>Minimum 4 GB RAM, 20 GB disk space (for repository clones)</li>
+                <li>Git 2.30+ installed</li>
+                <li>Network connectivity to Bitbucket and GitHub</li>
+                <li>OpsMigrator CLI version 2.4+</li>
+            </ul>
+        </div>
+
+        <div id="connectors" class="section">
+            <h2>2. Connector Setup</h2>
+
+            <h3>Step 1: Configure Bitbucket Connector</h3>
+            
+            <p><strong>Generating Bitbucket App Password (Bitbucket Cloud):</strong></p>
+            <ol>
+                <li>Navigate to <strong>Bitbucket.org → Personal settings → App passwords</strong></li>
+                <li>Click <strong>Create app password</strong></li>
+                <li>Label: "GitHub Migration"</li>
+                <li>Configure permissions:
+                    <ul>
+                        <li><strong>Repositories:</strong> Read, Write, Admin</li>
+                        <li><strong>Pull requests:</strong> Read</li>
+                        <li><strong>Webhooks:</strong> Read and write</li>
+                    </ul>
+                </li>
+                <li>Copy app password immediately (displayed once)</li>
+            </ol>
+
+            <p><strong>Bitbucket Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "Bitbucket",
+  "baseUrl": "https://api.bitbucket.org/2.0",
+  "authentication": {
+    "authMethod": "AppPassword",
+    "username": "your-bitbucket-username",
+    "appPassword": "YOUR_APP_PASSWORD"
+  },
+  "bitbucketConfiguration": {
+    "workspace": "your-workspace",
+    "repositories": ["repo1", "repo2", "repo3"],
+    "includeAllRepos": false,
+    "type": "cloud"
+  },
+  "dataOptions": {
+    "includePullRequests": true,
+    "includeOpenPRsOnly": false,
+    "includeBranchPermissions": true,
+    "includeWebhooks": true,
+    "includeDefaultReviewers": true
+  }
+}</div>
+
+            <div class="info-box">
+                <p><strong>Bitbucket Server/DC:</strong> If using Bitbucket Server or Data Center (on-premise), change <code>baseUrl</code> to <code>https://bitbucket.company.com/rest/api/1.0</code> and use Personal Access Token instead of App Password. Set <code>"type": "server"</code> in configuration.</p>
+            </div>
+
+            <h3>Step 2: Configure GitHub Connector</h3>
+
+            <p><strong>Generating GitHub Personal Access Token:</strong></p>
+            <ol>
+                <li>Navigate to <strong>GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong></li>
+                <li>Click <strong>Generate new token (classic)</strong></li>
+                <li>Configure scopes:
+                    <ul>
+                        <li><strong>repo</strong> (full control of private repositories)</li>
+                        <li><strong>delete_repo</strong> (optional, for cleanup)</li>
+                        <li><strong>admin:repo_hook</strong> (manage webhooks)</li>
+                        <li><strong>admin:org</strong> (manage organization, if applicable)</li>
+                    </ul>
+                </li>
+                <li>Set expiration: 90+ days</li>
+                <li>Copy token immediately</li>
+            </ol>
+
+            <p><strong>GitHub Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "GitHub",
+  "baseUrl": "https://api.github.com",
+  "authentication": {
+    "authMethod": "PersonalAccessToken",
+    "token": "ghp_YOUR_PERSONAL_ACCESS_TOKEN"
+  },
+  "githubConfiguration": {
+    "owner": "your-github-organization",
+    "createRepositories": true,
+    "visibility": "private",
+    "enableIssues": false,
+    "enableWiki": false,
+    "enableProjects": false
+  },
+  "migrationOptions": {
+    "preserveCommitHistory": true,
+    "preserveBranches": true,
+    "preserveTags": true,
+    "convertPullRequests": true,
+    "migrateBranchProtection": true,
+    "migrateWebhooks": true
+  }
+}</div>
+
+            <h3>Step 3: Validate Connections</h3>
+            <div class="code-block"># Validate both connectors
+opsmigrator connector validate --source bitbucket-connector.json
+opsmigrator connector validate --target github-connector.json
+
+# Expected output:
+✓ Bitbucket connection successful
+  - Workspace: your-workspace
+  - Repositories: 12 accessible
+  - Pull Requests: 247 (87 open, 160 closed)
+  - Branches: 94 total
+  - Webhooks: 8
+
+✓ GitHub connection successful
+  - Organization: your-github-organization
+  - Create repository permission: Granted
+  - Rate Limit: 4,997/5,000 remaining
+  - User mapping: 92% matched (8% require provisioning)</div>
+        </div>
+
+        <div id="process" class="section">
+            <h2>3. Migration Process (4 Phases)</h2>
+
+            <div class="phase-timeline">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Discovery & Analysis</h4>
+                    <p><strong>Duration:</strong> 2-4 hours</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Connect to Bitbucket and scan repositories</li>
+                        <li>AI analysis: Repository size, commit count, branch count</li>
+                        <li>Pull request analysis (open/closed)</li>
+                        <li>User identity mapping (Bitbucket → GitHub)</li>
+                        <li><strong>Output:</strong> Migration plan with repo priorities</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Configuration</h4>
+                    <p><strong>Duration:</strong> 1 day</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Review repository list and migration order</li>
+                        <li>Configure GitHub organization settings</li>
+                        <li>Resolve unmapped users (provision GitHub accounts)</li>
+                        <li>Define branch protection rules</li>
+                        <li><strong>Workshops:</strong> 1 session (1 hour)</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Repository Migration</h4>
+                    <p><strong>Duration:</strong> 1-2 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>OpsMigrator clones repos from Bitbucket (--mirror)</li>
+                        <li>Push to GitHub (--mirror, preserves all refs)</li>
+                        <li>Convert pull requests (metadata migration)</li>
+                        <li>Migrate branch protection rules</li>
+                        <li>Recreate webhooks</li>
+                        <li><strong>Throughput:</strong> 10-20 repos/day</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Validation & Cutover</h4>
+                    <p><strong>Duration:</strong> 1 day</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Comprehensive validation (commit count, branch count, tag count)</li>
+                        <li>User training on GitHub workflows</li>
+                        <li>Update CI/CD pipelines to GitHub repos</li>
+                        <li>Bitbucket read-only mode (optional)</li>
+                        <li><strong>Support:</strong> 1 week hypercare</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Git-Native Migration:</strong> OpsMigrator uses Git's native mirroring (<code>git clone --mirror</code>) to preserve 100% of repository data: commits, branches, tags, commit messages, author history, timestamps. This is identical to manual Git migration but automated across all repositories with validation and error handling.</p>
+            </div>
+
+            <div class="success-box">
+                <h4><i class="fas fa-trophy"></i> Success Story</h4>
+                <p><strong>Enterprise SaaS Company - 3-Day Migration</strong></p>
+                <ul>
+                    <li><strong>Scale:</strong> 67 repositories, 147,000 commits, 340 branches, 94 tags, 247 pull requests</li>
+                    <li><strong>Challenge:</strong> 8 years of Git history, multiple long-lived branches, 160 closed PRs to preserve</li>
+                    <li><strong>Result:</strong> 100% commit history preserved, 100% branch/tag preservation, 98.8% PR conversion success</li>
+                    <li><strong>Timeline:</strong> 3 days total (6 hours repository migration, 1 day PR conversion, 1 day validation)</li>
+                    <li><strong>Outcome:</strong> Seamless cutover, GitHub Actions deployed same day, Bitbucket decommissioned 2 weeks later, $18K annual savings</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="pr-conversion" class="section">
+            <h2>4. Pull Request Conversion</h2>
+
+            <h3>Pull Request Metadata Migration</h3>
+            <p>Pull requests are NOT part of Git history (they're server-side metadata). OpsMigrator recreates them in GitHub:</p>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>Bitbucket Field</th>
+                        <th>GitHub Field</th>
+                        <th>Transformation Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Title</td>
+                        <td>Title</td>
+                        <td>Direct mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>Body</td>
+                        <td>Markdown preserved; Bitbucket mentions converted</td>
+                    </tr>
+                    <tr>
+                        <td>State (OPEN/MERGED/DECLINED)</td>
+                        <td>State (open/closed)</td>
+                        <td>MERGED→closed (merged), DECLINED→closed, OPEN→open</td>
+                    </tr>
+                    <tr>
+                        <td>Author</td>
+                        <td>Created by</td>
+                        <td>User identity mapping: Bitbucket username → GitHub account</td>
+                    </tr>
+                    <tr>
+                        <td>Reviewers</td>
+                        <td>Requested reviewers</td>
+                        <td>Reviewers added to GitHub PR (for open PRs)</td>
+                    </tr>
+                    <tr>
+                        <td>Source Branch</td>
+                        <td>Head branch</td>
+                        <td>Direct mapping (branch must exist in GitHub repo)</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Branch</td>
+                        <td>Base branch</td>
+                        <td>Direct mapping (typically main/master)</td>
+                    </tr>
+                    <tr>
+                        <td>Comments</td>
+                        <td>Comments</td>
+                        <td>All comments preserved with original author and timestamp</td>
+                    </tr>
+                    <tr>
+                        <td>Merge Commit SHA</td>
+                        <td>Merge commit SHA</td>
+                        <td>Links GitHub PR to actual merge commit in Git history</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Closed Pull Request Limitation</h4>
+                <p><strong>GitHub API Constraint:</strong> Closed/merged PRs cannot be created via API (GitHub only allows creating open PRs). OpsMigrator creates Issues labeled "Migrated PR" for closed PRs, preserving metadata (title, description, comments, merge commit link). This is GitHub platform limitation, not OpsMigrator limitation. Open PRs recreated perfectly as GitHub PRs.</p>
+            </div>
+
+            <h3>Branch Protection Rules Migration</h3>
+            <ul>
+                <li><strong>Bitbucket Branch Permissions → GitHub Branch Protection:</strong> OpsMigrator converts Bitbucket branch permissions to equivalent GitHub branch protection rules</li>
+                <li><strong>Minimum Approvals:</strong> Bitbucket's "Minimum approvals: 2" → GitHub's "Required approving reviews: 2"</li>
+                <li><strong>Prevent Force Push:</strong> Direct mapping</li>
+                <li><strong>Require Builds to Pass:</strong> Maps to GitHub's "Require status checks to pass"</li>
+                <li><strong>Default Reviewers:</strong> Configured as CODEOWNERS file in GitHub (equivalent functionality)</li>
+            </ul>
+
+            <h3>Webhook Migration</h3>
+            <ul>
+                <li><strong>Bitbucket Webhooks → GitHub Webhooks:</strong> OpsMigrator recreates webhooks in GitHub with equivalent event triggers</li>
+                <li><strong>Event Mapping:</strong> repo:push → push, pullrequest:created → pull_request (opened), repo:commit_status_updated → status</li>
+                <li><strong>Payload Format:</strong> Different between Bitbucket and GitHub; receiving systems may need updates</li>
+                <li><strong>Webhook URLs:</strong> Preserved (external integrations like Slack, Jenkins continue working if they support GitHub format)</li>
+            </ul>
+        </div>
+
+        <div id="red-flags" class="section">
+            <h2>5. Red Flags & Mitigation</h2>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Large Repository Size (>5 GB)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 3 repositories exceed 5 GB each (Git history includes large binaries)</p>
+                <p><strong>Impact:</strong> Migration time increases significantly; GitHub has 100 GB per repo soft limit.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Use Git LFS (Large File Storage) for binaries (requires rewriting Git history)</li>
+                    <li>Archive historical large files to external storage (reduces repo size 40-70%)</li>
+                    <li>GitHub supports up to 100 GB per repo (contact GitHub support if exceeding)</li>
+                    <li>For repos >20 GB: Budget 4-8 hours per repo for migration (network bandwidth dependent)</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Closed Pull Requests (160 PRs)</h4>
+                    <span class="flag-severity severity-low">LOW</span>
+                </div>
+                <p><strong>Detection:</strong> 160 closed/merged pull requests in Bitbucket</p>
+                <p><strong>Impact:</strong> Cannot be recreated as GitHub PRs (API limitation); preserved as Issues instead.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator creates GitHub Issues labeled "Migrated PR" for closed PRs</li>
+                    <li>Issue contains full PR metadata: title, description, comments, author, merge commit link</li>
+                    <li>Users can click merge commit link to view actual code changes in Git history</li>
+                    <li>98% of teams find this acceptable (closed PRs are historical reference, not operational)</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">User Identity Mismatch (8 users)</h4>
+                    <span class="flag-severity severity-low">LOW</span>
+                </div>
+                <p><strong>Detection:</strong> 8 Bitbucket users have no matching GitHub account</p>
+                <p><strong>Impact:</strong> PRs, comments, and reviews cannot be assigned to correct GitHub users.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Export user mapping report from OpsMigrator</li>
+                    <li>Provision GitHub accounts for active users (coordinate with IT)</li>
+                    <li>Map retired users to generic "Historical User" account</li>
+                    <li>Original Bitbucket username preserved in comments/descriptions</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Bitbucket Pipelines</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 34 repositories have bitbucket-pipelines.yml files</p>
+                <p><strong>Impact:</strong> Bitbucket Pipelines YAML incompatible with GitHub Actions; manual conversion required.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator provides pipeline conversion assistant (40-60% automated)</li>
+                    <li>Budget 1-3 hours per pipeline for manual conversion and testing</li>
+                    <li>Alternatively: Use third-party CI/CD (Jenkins, CircleCI) that supports both Bitbucket and GitHub</li>
+                    <li>GitHub Actions templates available for common patterns (Node.js, Python, Docker)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="best-practices" class="section">
+            <h2>6. Best Practices</h2>
+
+            <h3>Before Migration</h3>
+            <ul>
+                <li><strong>User Provisioning:</strong> Ensure all active Bitbucket users have GitHub accounts 1-2 weeks before migration</li>
+                <li><strong>Repository Cleanup:</strong> Archive unused repositories (reduces migration scope by 20-40%)</li>
+                <li><strong>Git LFS Evaluation:</strong> For repos with large binaries, plan Git LFS migration 2-4 weeks in advance</li>
+                <li><strong>CI/CD Inventory:</strong> Document all Bitbucket Pipelines and external integrations (requires post-migration updates)</li>
+                <li><strong>Communication:</strong> Notify team 1 week before migration; plan training session on GitHub workflows</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>Bitbucket Remains Active:</strong> No need to freeze Bitbucket; migration clones data without locking</li>
+                <li><strong>Pilot First:</strong> Migrate 1-2 repositories as proof of concept (validates process)</li>
+                <li><strong>Sequential Migration:</strong> Migrate repos one at a time (easier to troubleshoot)</li>
+                <li><strong>Bandwidth Monitoring:</strong> Large repos (>5 GB) may take 2-4 hours each; schedule during off-hours</li>
+                <li><strong>Real-Time Validation:</strong> OpsMigrator validates commit count, branch count, tag count after each repo</li>
+            </ul>
+
+            <h3>After Migration</h3>
+            <ul>
+                <li><strong>Parallel Operation:</strong> Run Bitbucket (read-only) and GitHub in parallel for 1-2 weeks</li>
+                <li><strong>CI/CD Updates:</strong> Update all pipelines, build servers, deployment scripts to point to GitHub repos</li>
+                <li><strong>User Training:</strong> Conduct GitHub training (2-hour workshop on PRs, Actions, Projects)</li>
+                <li><strong>Webhook Testing:</strong> Test all migrated webhooks (Slack, Jira, Jenkins) to ensure GitHub format compatibility</li>
+                <li><strong>Bitbucket Decommissioning:</strong> Archive Bitbucket workspace 2-4 weeks after successful cutover (keep read-only for 3-6 months)</li>
+            </ul>
+        </div>
+
+        <div id="faq" class="section">
+            <h2>7. Frequently Asked Questions</h2>
+
+            <h3>Is 100% of Git history preserved?</h3>
+            <p><strong>Yes.</strong> OpsMigrator uses Git's native mirroring (<code>git clone --mirror</code> + <code>git push --mirror</code>) which preserves 100% of repository data: all commits, branches, tags, commit messages, author history, timestamps, merge commits. This is identical to manual Git migration. GitHub repo will be exact copy of Bitbucket repo from Git perspective.</p>
+
+            <h3>What happens to Bitbucket Pipelines?</h3>
+            <p>Bitbucket Pipelines YAML files (bitbucket-pipelines.yml) are migrated to GitHub repository but NOT functional. Must manually convert to GitHub Actions YAML (.github/workflows/). OpsMigrator provides conversion assistant (40-60% automated) but human review required. Budget 1-3 hours per pipeline. Common alternative: Use third-party CI/CD (Jenkins, CircleCI) that supports both platforms.</p>
+
+            <h3>Can I keep using Bitbucket after migration?</h3>
+            <p>Yes. Recommended approach: Put Bitbucket in read-only mode (disable push permissions) after migration complete. Keep accessible for 2-4 weeks during parallel operation. This allows rollback if issues discovered. After successful cutover, archive Bitbucket workspace (keep for 3-6 months for compliance/reference). Bitbucket does NOT need to be deleted immediately.</p>
+
+            <h3>How long does Bitbucket need to be offline?</h3>
+            <p>Bitbucket does NOT need to be offline. Migration is clone operation (read-only, no data locked). Teams continue committing to Bitbucket during migration if needed. However, recommend freezing Bitbucket (read-only) 24 hours before migration to prevent data drift. After migration, incremental sync available to capture any last-minute commits.</p>
+
+            <h3>What about closed pull requests?</h3>
+            <p>Closed/merged PRs cannot be recreated as GitHub PRs (GitHub API limitation). OpsMigrator creates GitHub Issues labeled "Migrated PR" containing full PR metadata (title, description, comments, merge commit link). Users can click merge commit link to view code changes in Git history. Open PRs recreated perfectly as GitHub PRs. 98% of teams find this acceptable (closed PRs are historical reference).</p>
+
+            <h3>What's the typical cost for Bitbucket → GitHub migration?</h3>
+            <ul>
+                <li><strong>Small (10-30 repos):</strong> $5K-$10K (2-3 days, includes OpsMigrator license, consulting)</li>
+                <li><strong>Medium (30-100 repos):</strong> $10K-$20K (3-5 days, includes training, pipeline guidance)</li>
+                <li><strong>Large (100-300+ repos):</strong> $20K-$40K (5-10 days, includes pipeline conversion, Git LFS migration)</li>
+            </ul>
+            <p>Costs include: OpsMigrator license, consultant fees, GitHub licensing (if new), user training. Pipeline conversion (if needed): add $3K-$15K depending on pipeline complexity. This is lowest-cost migration scenario (repository migration simpler than issue tracking transformation).</p>
+        </div>
+
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Ready to Migrate to GitHub?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Schedule a demo to see how OpsMigrator simplifies Bitbucket to GitHub repository migration.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#demo" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Demo
+                </a>
+                <a href="mailto:admin@opsmigrator.in" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Sales
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-lightest); text-align: center;">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Documentation Hub
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">All Guides</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete guide for migrating from GitHub to Azure DevOps - Issue conversion, pipeline migration, and DevOps integration with OpsMigrator AI">
+    <title>GitHub to Azure DevOps Migration Guide | OpsMigrator AI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .doc-content { max-width: 1000px; margin: 0 auto; padding: calc(80px + 3rem) 2rem 4rem; }
+        .doc-header { background: linear-gradient(135deg, #FFB800, #00C48C); color: white; padding: 3rem 2rem; border-radius: 1.5rem; margin-bottom: 3rem; }
+        .complexity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-weight: 600; margin-bottom: 1rem; backdrop-filter: blur(10px); }
+        .doc-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .doc-meta { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .doc-meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-meta-item i { font-size: 1.25rem; }
+        .migration-overview { background: var(--gray-lightest); padding: 2rem; border-radius: 1rem; margin-bottom: 3rem; }
+        .migrates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .migrates-item { background: white; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .migrates-item i { color: var(--primary-color); font-size: 1.25rem; }
+        .toc { background: white; border: 2px solid var(--gray-lightest); border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; }
+        .toc h3 { margin-bottom: 1rem; color: var(--dark); }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-lightest); }
+        .toc li:last-child { border-bottom: none; }
+        .toc a { color: var(--primary-color); text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .toc a:hover { text-decoration: underline; }
+        .section { margin-bottom: 3rem; }
+        .section h2 { color: var(--dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--primary-color); }
+        .section h3 { color: var(--dark); margin: 2rem 0 1rem; }
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'Fira Code', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .warning-box { background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .warning-box h4 { color: #856404; margin-bottom: 0.5rem; }
+        .info-box { background: #D1ECF1; border-left: 4px solid #0078D4; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .success-box { background: #D4EDDA; border-left: 4px solid #00C48C; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .mapping-table th, .mapping-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-lightest); }
+        .mapping-table th { background: var(--gray-lightest); font-weight: 600; color: var(--dark); }
+        .mapping-table tr:hover { background: var(--gray-lightest); }
+        .red-flag { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; }
+        .red-flag-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .flag-severity { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; color: white; }
+        .severity-high { background: #FF8C42; }
+        .severity-medium { background: #FFB800; }
+        .severity-low { background: #00C48C; }
+        .phase-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .phase-card { background: white; border: 2px solid var(--gray-lightest); border-radius: 0.75rem; padding: 1.5rem; }
+        .phase-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>OpsMigrator AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="../index.html#scenarios" class="nav-link">Migration Scenarios</a></li>
+                    <li><a href="index.html" class="nav-link">Documentation</a></li>
+                    <li><a href="../index.html#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="doc-content">
+        <div class="doc-header">
+            <div class="complexity-badge">🟡 MEDIUM COMPLEXITY</div>
+            <h1 class="doc-title">GitHub to Azure DevOps Migration</h1>
+            <p style="font-size: 1.125rem; opacity: 0.95;">
+                Streamlined migration from GitHub Issues to Azure DevOps Work Items with pipeline migration guidance and DevOps integration best practices.
+            </p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span><strong>Duration:</strong> 3-5 days</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-database"></i>
+                    <span><strong>Data Volume:</strong> 5K-50K issues</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Success Rate:</strong> 97.2%</span>
+                </div>
+                <div class="doc-meta-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><strong>Status:</strong> Production Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="migration-overview">
+            <h2 style="margin-bottom: 1rem;">What Gets Migrated</h2>
+            <p>GitHub to Azure DevOps migration focusing on issue tracking, labels, milestones, and DevOps workflow integration.</p>
+            <div class="migrates-grid">
+                <div class="migrates-item">
+                    <i class="fab fa-github"></i>
+                    <span>Issues & Pull Requests</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-tags"></i>
+                    <span>Labels & Milestones</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-comments"></i>
+                    <span>Comments & Reactions</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-users"></i>
+                    <span>User Assignments</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-code-branch"></i>
+                    <span>Repository Metadata</span>
+                </div>
+                <div class="migrates-item">
+                    <i class="fas fa-link"></i>
+                    <span>Issue References</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p><strong>DevOps Integration Focus:</strong> This migration is ideal for teams consolidating from GitHub Issues to Azure DevOps Work Items. Git repositories can remain on GitHub (Azure DevOps integrates natively) or be migrated separately. Pipeline migration covered in best practices section.</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#prerequisites"><span>1. Prerequisites</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#connectors"><span>2. Connector Setup</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#issue-conversion"><span>3. Issue to Work Item Conversion</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#process"><span>4. Migration Process (5 Phases)</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#pipeline-guidance"><span>5. Pipeline Migration Guidance</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#red-flags"><span>6. Red Flags & Mitigation</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#best-practices"><span>7. Best Practices</span><i class="fas fa-arrow-right"></i></a></li>
+                <li><a href="#faq"><span>8. FAQ</span><i class="fas fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+
+        <div id="prerequisites" class="section">
+            <h2>1. Prerequisites</h2>
+            
+            <h3>GitHub Requirements</h3>
+            <ul>
+                <li><strong>Repository Access:</strong> Admin or Owner access to repositories</li>
+                <li><strong>Authentication:</strong> Personal Access Token (classic) with full repo scope</li>
+                <li><strong>API Access:</strong> GitHub REST API v3 and GraphQL API v4</li>
+                <li><strong>Rate Limits:</strong> 5,000 requests/hour (authenticated)</li>
+            </ul>
+
+            <h3>Azure DevOps Requirements</h3>
+            <ul>
+                <li><strong>Organization:</strong> Existing Azure DevOps organization</li>
+                <li><strong>Project:</strong> Target project with configured process template (Agile recommended)</li>
+                <li><strong>Access Level:</strong> Project Administrator</li>
+                <li><strong>PAT Token:</strong> Full access to Work Items, Code (if migrating repos), Build, Release</li>
+            </ul>
+
+            <h3>Technical Requirements</h3>
+            <ul>
+                <li>Minimum 4 GB RAM, 10 GB disk space</li>
+                <li>Network connectivity to GitHub.com and Azure DevOps</li>
+                <li>OpsMigrator CLI version 2.4+</li>
+            </ul>
+        </div>
+
+        <div id="connectors" class="section">
+            <h2>2. Connector Setup</h2>
+
+            <h3>Step 1: Configure GitHub Connector</h3>
+            
+            <p><strong>Generating GitHub Personal Access Token:</strong></p>
+            <ol>
+                <li>Navigate to <strong>GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong></li>
+                <li>Click <strong>Generate new token (classic)</strong></li>
+                <li>Configure scopes:
+                    <ul>
+                        <li><strong>repo</strong> (full control of private repositories)</li>
+                        <li><strong>read:org</strong> (read organization membership)</li>
+                        <li><strong>read:user</strong> (read user profile data)</li>
+                    </ul>
+                </li>
+                <li>Set expiration: 90+ days</li>
+                <li>Copy token immediately</li>
+            </ol>
+
+            <p><strong>GitHub Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "GitHub",
+  "baseUrl": "https://api.github.com",
+  "authentication": {
+    "authMethod": "PersonalAccessToken",
+    "token": "ghp_YOUR_PERSONAL_ACCESS_TOKEN"
+  },
+  "githubConfiguration": {
+    "owner": "your-organization-or-username",
+    "repositories": ["repo1", "repo2", "repo3"],
+    "includeAllRepos": false
+  },
+  "dataOptions": {
+    "includeIssues": true,
+    "includePullRequests": true,
+    "includeComments": true,
+    "includeReactions": true,
+    "includeClosedIssues": true,
+    "closedIssueCutoffDays": 365
+  },
+  "rateLimiting": {
+    "maxRequestsPerHour": 4500,
+    "useGraphQL": true
+  }
+}</div>
+
+            <div class="info-box">
+                <p><strong>Rate Limit Strategy:</strong> GitHub allows 5,000 requests/hour for authenticated users. OpsMigrator uses GraphQL API (single request for issue + comments + labels) to minimize API calls. For 10K issues, expect 500-800 API calls (well within limits). Migration typically completes in 2-4 hours for data extraction.</p>
+            </div>
+
+            <h3>Step 2: Configure Azure DevOps Connector</h3>
+
+            <p><strong>Generating Azure DevOps PAT:</strong></p>
+            <ol>
+                <li>Navigate to <code>https://dev.azure.com/{organization}</code></li>
+                <li>Click profile icon → <strong>Personal access tokens</strong></li>
+                <li>Click <strong>+ New Token</strong></li>
+                <li>Configure scopes:
+                    <ul>
+                        <li><strong>Work Items:</strong> Read, Write, & Manage</li>
+                        <li><strong>Code:</strong> Read & Write (if migrating repositories)</li>
+                        <li><strong>Project and Team:</strong> Read</li>
+                        <li><strong>Identity:</strong> Read</li>
+                    </ul>
+                </li>
+                <li>Set expiration: 90+ days</li>
+                <li>Copy PAT token immediately</li>
+            </ol>
+
+            <p><strong>Azure DevOps Connector Configuration:</strong></p>
+            <div class="code-block">{
+  "connectorType": "AzureDevOps",
+  "baseUrl": "https://dev.azure.com/{organization}",
+  "authentication": {
+    "authMethod": "PAT",
+    "personalAccessToken": "YOUR_PAT_TOKEN"
+  },
+  "adoConfiguration": {
+    "organization": "your-org",
+    "project": "YourProject",
+    "apiVersion": "7.1",
+    "areaPath": "YourProject\\GitHub Migration",
+    "iterationPath": "YourProject\\Current",
+    "processTemplate": "Agile"
+  },
+  "workItemMapping": {
+    "issueType": "User Story",
+    "pullRequestType": "Task",
+    "defaultState": "New"
+  }
+}</div>
+
+            <h3>Step 3: Validate Connections</h3>
+            <div class="code-block"># Validate both connectors
+opsmigrator connector validate --source github-connector.json
+opsmigrator connector validate --target ado-connector.json
+
+# Expected output:
+✓ GitHub connection successful
+  - Organization: your-org
+  - Repositories: 3 (repo1, repo2, repo3)
+  - Open Issues: 847
+  - Closed Issues (last 365 days): 1,293
+  - Rate Limit: 4,987/5,000 remaining
+
+✓ Azure DevOps connection successful
+  - Organization: your-org, Project: YourProject
+  - Process Template: Agile
+  - Area Path: YourProject\GitHub Migration
+  - User mapping: 94% matched (6% require provisioning)</div>
+        </div>
+
+        <div id="issue-conversion" class="section">
+            <h2>3. Issue to Work Item Conversion</h2>
+
+            <h3>Issue Type Mapping Strategy</h3>
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>GitHub Type</th>
+                        <th>Azure DevOps Work Item</th>
+                        <th>Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Issue (default)</td>
+                        <td>User Story</td>
+                        <td>Most GitHub issues represent features/user stories</td>
+                    </tr>
+                    <tr>
+                        <td>Issue with "bug" label</td>
+                        <td>Bug</td>
+                        <td>Label-based classification</td>
+                    </tr>
+                    <tr>
+                        <td>Issue with "enhancement" label</td>
+                        <td>User Story</td>
+                        <td>Feature enhancement maps to user story</td>
+                    </tr>
+                    <tr>
+                        <td>Issue with "task" label</td>
+                        <td>Task</td>
+                        <td>Direct task mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Pull Request</td>
+                        <td>Task (linked to original issue)</td>
+                        <td>PR becomes implementation task</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Field Mapping</h3>
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>GitHub Field</th>
+                        <th>Azure DevOps Field</th>
+                        <th>Transformation Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Title</td>
+                        <td>Title</td>
+                        <td>Direct mapping</td>
+                    </tr>
+                    <tr>
+                        <td>Body (Description)</td>
+                        <td>Description</td>
+                        <td>Markdown preserved; GitHub mentions converted to ADO format</td>
+                    </tr>
+                    <tr>
+                        <td>State (open/closed)</td>
+                        <td>State (New/Active/Closed)</td>
+                        <td>Open→New/Active (based on assignee), Closed→Closed</td>
+                    </tr>
+                    <tr>
+                        <td>Labels</td>
+                        <td>Tags</td>
+                        <td>All labels become tags; special labels (bug, enhancement) also determine work item type</td>
+                    </tr>
+                    <tr>
+                        <td>Assignee</td>
+                        <td>Assigned To</td>
+                        <td>User identity mapping: GitHub username → Azure AD email</td>
+                    </tr>
+                    <tr>
+                        <td>Milestone</td>
+                        <td>Iteration Path</td>
+                        <td>GitHub milestones map to ADO iterations</td>
+                    </tr>
+                    <tr>
+                        <td>Comments</td>
+                        <td>Discussion</td>
+                        <td>All comments preserved with original author and timestamp</td>
+                    </tr>
+                    <tr>
+                        <td>Reactions (👍, ❤️)</td>
+                        <td>Custom Field (optional)</td>
+                        <td>Reaction counts preserved in custom field or comment</td>
+                    </tr>
+                    <tr>
+                        <td>Issue References (#123)</td>
+                        <td>Related Links</td>
+                        <td>GitHub issue references become ADO work item links</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><strong>Label-Based Classification:</strong> OpsMigrator scans all labels across repositories to detect common patterns (bug, enhancement, task, documentation, etc.). You can customize classification rules to match your team's labeling conventions. Default rules achieve 85-90% accurate work item type assignment.</p>
+            </div>
+        </div>
+
+        <div id="process" class="section">
+            <h2>4. Migration Process (5 Phases)</h2>
+
+            <div class="phase-timeline">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Discovery & Analysis</h4>
+                    <p><strong>Duration:</strong> 2-4 hours</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Connect to GitHub and scan repositories</li>
+                        <li>AI analysis: 10-20 minutes for 10K issues</li>
+                        <li>Label pattern detection (bug, enhancement, task)</li>
+                        <li>User identity mapping (GitHub → Azure AD)</li>
+                        <li><strong>Output:</strong> Migration plan report</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Configuration</h4>
+                    <p><strong>Duration:</strong> 1-2 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Review work item type mappings</li>
+                        <li>Configure milestone → iteration mapping</li>
+                        <li>Resolve unmapped users</li>
+                        <li>Define area paths for repositories</li>
+                        <li><strong>Workshops:</strong> 1 session (2 hours)</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Pilot Migration</h4>
+                    <p><strong>Duration:</strong> 1 day</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Migrate 1 repository (500-1K issues)</li>
+                        <li>Validate work item types and links</li>
+                        <li>User acceptance testing</li>
+                        <li><strong>Execution:</strong> 1-2 hours</li>
+                        <li><strong>Iterations:</strong> 1 cycle</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Production Migration</h4>
+                    <p><strong>Duration:</strong> 1-2 days</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Migrate all repositories</li>
+                        <li>Throughput: 5K-10K issues/day</li>
+                        <li>Real-time monitoring and error handling</li>
+                        <li><strong>Execution:</strong> 4-8 hours</li>
+                        <li><strong>GitHub Status:</strong> Remains operational</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">5</div>
+                    <h4>Validation & Cutover</h4>
+                    <p><strong>Duration:</strong> 1 day</p>
+                    <ul style="margin-top: 1rem; padding-left: 1.25rem;">
+                        <li>Comprehensive validation report</li>
+                        <li>User training on Azure Boards</li>
+                        <li>Parallel operation (GitHub + ADO)</li>
+                        <li>GitHub Issues disable (optional)</li>
+                        <li><strong>Support:</strong> 1 week hypercare</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4><i class="fas fa-trophy"></i> Success Story</h4>
+                <p><strong>SaaS Startup - 4-Day Migration</strong></p>
+                <ul>
+                    <li><strong>Scale:</strong> 12,487 issues across 8 repositories, 37 users, 94 labels</li>
+                    <li><strong>Challenge:</strong> 5 years of GitHub Issues history, 4,200 closed issues, complex label taxonomy</li>
+                    <li><strong>Result:</strong> 99.1% data accuracy, 100% link preservation, all comments migrated</li>
+                    <li><strong>Timeline:</strong> 4 days total (2 hours pilot, 6 hours production migration)</li>
+                    <li><strong>Outcome:</strong> Seamless DevOps consolidation, GitHub repos remain (Azure DevOps integration), 94% user adoption within 1 week</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="pipeline-guidance" class="section">
+            <h2>5. Pipeline Migration Guidance</h2>
+
+            <h3>GitHub Actions to Azure Pipelines</h3>
+            <p>Pipeline migration is <strong>separate from issue migration</strong> but often part of consolidation strategy:</p>
+
+            <table class="mapping-table">
+                <thead>
+                    <tr>
+                        <th>GitHub Actions Concept</th>
+                        <th>Azure Pipelines Equivalent</th>
+                        <th>Migration Approach</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Workflow YAML (.github/workflows/)</td>
+                        <td>Pipeline YAML (azure-pipelines.yml)</td>
+                        <td>Manual conversion (syntax differs); OpsMigrator provides conversion assistant</td>
+                    </tr>
+                    <tr>
+                        <td>Jobs</td>
+                        <td>Jobs</td>
+                        <td>Direct mapping with syntax adjustments</td>
+                    </tr>
+                    <tr>
+                        <td>Steps</td>
+                        <td>Steps</td>
+                        <td>Direct mapping; "uses" actions must be converted to tasks</td>
+                    </tr>
+                    <tr>
+                        <td>Marketplace Actions (uses: actions/...)</td>
+                        <td>Azure DevOps Tasks (task: ...)</td>
+                        <td>Find equivalent task or recreate as script step</td>
+                    </tr>
+                    <tr>
+                        <td>Secrets</td>
+                        <td>Pipeline Variables (secret)</td>
+                        <td>Manual recreation in Azure DevOps Library</td>
+                    </tr>
+                    <tr>
+                        <td>Environments</td>
+                        <td>Environments</td>
+                        <td>Recreate in Azure DevOps with approvals</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Pipeline Migration Complexity</h4>
+                <p><strong>Not Automated:</strong> GitHub Actions → Azure Pipelines conversion requires manual effort (YAML syntax incompatible). OpsMigrator provides conversion assistant (50-70% automated) but human review required. Budget 2-4 hours per pipeline for conversion + testing. Alternatively, keep GitHub repos and use Azure Pipelines with GitHub integration (no YAML conversion needed).</p>
+            </div>
+
+            <h3>Repository Migration Options</h3>
+            <ul>
+                <li><strong>Option 1 (Recommended): Keep GitHub Repos</strong>
+                    <ul>
+                        <li>Azure DevOps integrates natively with GitHub (no repository migration needed)</li>
+                        <li>Configure GitHub connection in Azure DevOps (OAuth)</li>
+                        <li>Work items can link to GitHub commits/PRs</li>
+                        <li>Azure Pipelines can build from GitHub repos</li>
+                        <li><strong>Benefit:</strong> Zero repository migration effort, leverages GitHub's code review features</li>
+                    </ul>
+                </li>
+                <li><strong>Option 2: Migrate Repos to Azure Repos</strong>
+                    <ul>
+                        <li>Full consolidation into Azure DevOps ecosystem</li>
+                        <li>Use <code>git clone --mirror</code> + <code>git push --mirror</code> for repository migration</li>
+                        <li>All branches, tags, commit history preserved</li>
+                        <li>Branch policies and PR history must be recreated manually</li>
+                        <li><strong>Effort:</strong> 1-2 days for repository migration + policy configuration</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="info-box">
+                <p><strong>Hybrid Approach:</strong> 80% of teams keep GitHub repositories and migrate only issue tracking to Azure DevOps. This provides best of both worlds: GitHub's code collaboration + Azure DevOps' comprehensive work item tracking and reporting. Azure DevOps Boards integrates seamlessly with GitHub commits and PRs.</p>
+            </div>
+        </div>
+
+        <div id="red-flags" class="section">
+            <h2>6. Red Flags & Mitigation</h2>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Complex Label Taxonomy (94 labels)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 94 labels detected across repositories; many are repository-specific</p>
+                <p><strong>Impact:</strong> Azure DevOps work items become cluttered with 94 tags; users overwhelmed.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator provides label usage analysis (frequency, last used date)</li>
+                    <li>Consolidate labels: "bug" + "Bug" + "🐛 bug" → single "bug" tag</li>
+                    <li>Archive labels used &lt;5 times (preserve in custom field for history)</li>
+                    <li>Typical reduction: 94 labels → 25-35 meaningful tags</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">User Identity Mismatch (12 users)</h4>
+                    <span class="flag-severity severity-medium">MEDIUM</span>
+                </div>
+                <p><strong>Detection:</strong> 12 GitHub users have no matching Azure AD account</p>
+                <p><strong>Impact:</strong> Work items cannot be assigned; validation fails.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>Export user mapping report from OpsMigrator</li>
+                    <li>Provision Azure AD accounts for active users (coordinate with IT)</li>
+                    <li>Map external contributors to generic "External Contributor" account</li>
+                    <li>Preserve original GitHub username in custom field</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">GitHub Mentions (@username)</h4>
+                    <span class="flag-severity severity-low">LOW</span>
+                </div>
+                <p><strong>Detection:</strong> Issue descriptions/comments contain GitHub mentions (@username)</p>
+                <p><strong>Impact:</strong> Azure DevOps mentions use different syntax; references break.</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator auto-converts: @githubuser → @azuread-email</li>
+                    <li>Unmatched users: @githubuser → @githubuser (text preserved, mention disabled)</li>
+                    <li>90-95% mention conversion success rate</li>
+                </ul>
+            </div>
+
+            <div class="red-flag">
+                <div class="red-flag-header">
+                    <h4 style="margin: 0;">Pull Request History</h4>
+                    <span class="flag-severity severity-low">LOW</span>
+                </div>
+                <p><strong>Detection:</strong> 2,400 closed pull requests in GitHub history</p>
+                <p><strong>Impact:</strong> PRs don't have direct equivalent in Azure DevOps Boards (PRs are in Azure Repos).</p>
+                <p><strong>Mitigation:</strong></p>
+                <ul>
+                    <li>OpsMigrator creates Task work items for PRs (linked to original issue if referenced)</li>
+                    <li>PR metadata preserved: Title, Description, Author, Merged Date, Branch names</li>
+                    <li>Link to original GitHub PR in work item for full history</li>
+                    <li>If repos migrated to Azure Repos: GitHub PR history inaccessible (archive externally)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="best-practices" class="section">
+            <h2>7. Best Practices</h2>
+
+            <h3>Before Migration</h3>
+            <ul>
+                <li><strong>Label Cleanup:</strong> Consolidate and archive unused labels 1-2 weeks before migration</li>
+                <li><strong>User Provisioning:</strong> Ensure all active GitHub users have Azure AD accounts</li>
+                <li><strong>Process Template Selection:</strong> Choose Agile template (best fit for GitHub workflow)</li>
+                <li><strong>Milestone Mapping:</strong> Create matching iterations in Azure DevOps for active milestones</li>
+                <li><strong>Communication:</strong> Notify team 1 week before migration; plan training session</li>
+            </ul>
+
+            <h3>During Migration</h3>
+            <ul>
+                <li><strong>GitHub Remains Active:</strong> No need to freeze GitHub; migration reads data without locking</li>
+                <li><strong>Pilot First:</strong> Migrate 1 repository as proof of concept (validates mappings)</li>
+                <li><strong>Monitor Progress:</strong> OpsMigrator provides real-time progress dashboard</li>
+                <li><strong>Issue Creation Order:</strong> Migrate in chronological order to preserve issue references (#123 → work item ID)</li>
+            </ul>
+
+            <h3>After Migration</h3>
+            <ul>
+                <li><strong>Parallel Operation:</strong> Run GitHub Issues (read-only) and Azure Boards in parallel for 1-2 weeks</li>
+                <li><strong>User Training:</strong> Conduct Azure Boards training (half-day workshop)</li>
+                <li><strong>GitHub Issues Disable:</strong> Disable GitHub Issues in repo settings (optional, after cutover confirmed)</li>
+                <li><strong>Repository Strategy:</strong> Decide whether to keep GitHub repos or migrate to Azure Repos</li>
+                <li><strong>Pipeline Conversion:</strong> Budget 1-2 weeks for GitHub Actions → Azure Pipelines conversion (if needed)</li>
+            </ul>
+        </div>
+
+        <div id="faq" class="section">
+            <h2>8. Frequently Asked Questions</h2>
+
+            <h3>Do I have to migrate GitHub repositories to Azure Repos?</h3>
+            <p><strong>No.</strong> Azure DevOps integrates natively with GitHub repositories. 80% of teams keep repos on GitHub and migrate only issue tracking to Azure DevOps Boards. Azure Pipelines can build from GitHub repos, and work items can link to GitHub commits/PRs. Only migrate repos if you want full consolidation into Azure DevOps ecosystem.</p>
+
+            <h3>What happens to GitHub Actions workflows?</h3>
+            <p>GitHub Actions workflows remain functional on GitHub (if repos stay on GitHub). If you want to migrate pipelines to Azure Pipelines, manual YAML conversion required (syntax incompatible). OpsMigrator provides conversion assistant (50-70% automated). Budget 2-4 hours per pipeline. Alternatively, use Azure Pipelines with GitHub integration (no YAML conversion needed).</p>
+
+            <h3>Are GitHub Issue numbers preserved in Azure DevOps?</h3>
+            <p>No. Azure DevOps assigns sequential work item IDs starting from 1 (or next available). OpsMigrator preserves GitHub issue number in custom field "GitHub Issue #" for reference. Issue references in comments (#123) are converted to Azure DevOps links (work item ID). For 10K GitHub issues starting at #1 → Azure DevOps work items starting at #5001 (if project has 5K existing items).</p>
+
+            <h3>How long does GitHub need to be offline?</h3>
+            <p>GitHub does NOT need to be offline. Migration is read-only operation (no data locked). Teams continue working in GitHub during migration. After migration complete, run parallel operation (GitHub + Azure DevOps) for 1-2 weeks, then cutover. To prevent new issues during migration window, temporarily disable GitHub Issues in repo settings (optional).</p>
+
+            <h3>Can I migrate only open issues?</h3>
+            <p>Yes. OpsMigrator supports selective migration by state, label, milestone, or date range. Common strategy: Migrate open issues + closed issues from last 6-12 months (operational focus). Reduces scope by 60-80% for mature projects. Keep GitHub accessible for historical reference.</p>
+
+            <h3>What's the typical cost for GitHub → ADO migration?</h3>
+            <ul>
+                <li><strong>Small (1K-5K issues):</strong> $8K-$15K (2-3 days, includes OpsMigrator license, consulting)</li>
+                <li><strong>Medium (5K-20K issues):</strong> $15K-$30K (3-5 days, includes training, pipeline guidance)</li>
+                <li><strong>Large (20K-50K+ issues):</strong> $30K-$60K (5-10 days, includes pipeline conversion, repo migration)</li>
+            </ul>
+            <p>Costs include: OpsMigrator license, consultant fees, Azure DevOps licensing (if new), user training. Pipeline conversion (if needed): add $5K-$20K depending on pipeline complexity.</p>
+        </div>
+
+        <div style="background: var(--gray-lightest); padding: 3rem; border-radius: 1.5rem; text-align: center; margin-top: 4rem;">
+            <h2 style="margin-bottom: 1rem;">Ready to Consolidate Your DevOps Tools?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Schedule a demo to see how OpsMigrator simplifies GitHub to Azure DevOps migration.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#demo" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-check"></i> Schedule Demo
+                </a>
+                <a href="mailto:admin@opsmigrator.in" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Contact Sales
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-lightest); text-align: center;">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Documentation Hub
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        <span>OpsMigrator AI</span>
+                    </div>
+                    <p>Intelligent Enterprise Migration Platform</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="index.html">All Guides</a></li>
+                        <li><a href="jira-cloud-to-ado.html">Jira Cloud → ADO</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:admin@opsmigrator.in">Email Support</a></li>
+                        <li><a href="../index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OpsMigrator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
