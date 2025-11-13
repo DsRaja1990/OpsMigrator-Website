@@ -65,15 +65,19 @@ class EmailService {
 
     // Send email using Web3Forms
     async sendWithWeb3Forms(formData) {
+        // Web3Forms API payload structure
         const payload = {
             access_key: window.WEB3FORMS_CONFIG.accessKey,
             subject: `New Contact Form: ${formData.migrationType || 'General Inquiry'}`,
-            from_name: formData.name,
+            name: formData.name,
             email: formData.email,
-            company: formData.company || 'Not provided',
-            migration_type: formData.migrationType || 'Not specified',
-            message: formData.message,
-            to_email: this.config.recipientEmail
+            message: `
+Company: ${formData.company || 'Not provided'}
+Migration Type: ${formData.migrationType || 'Not specified'}
+
+Message:
+${formData.message}
+            `.trim()
         };
 
         const response = await fetch(window.WEB3FORMS_CONFIG.endpoint, {
@@ -86,10 +90,18 @@ class EmailService {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to send email via Web3Forms');
+            const errorText = await response.text();
+            throw new Error(`Web3Forms API error: ${errorText}`);
         }
 
-        return await response.json();
+        const result = await response.json();
+        
+        // Web3Forms returns success: true/false
+        if (!result.success) {
+            throw new Error(result.message || 'Failed to send email via Web3Forms');
+        }
+
+        return result;
     }
 
     // Main send method - automatically chooses the right service
