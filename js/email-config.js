@@ -26,8 +26,8 @@ const EMAIL_CONFIG = {
 // Alternative: Web3Forms Configuration (Completely Free, Unlimited)
 // Sign up at https://web3forms.com/ to get your access key
 const WEB3FORMS_CONFIG = {
-    enabled: false, // Set to true to use Web3Forms instead of EmailJS
-    accessKey: 'YOUR_WEB3FORMS_ACCESS_KEY', // Get from https://web3forms.com/
+    enabled: true, // Set to true to use Web3Forms instead of EmailJS
+    accessKey: '36a2e501-6650-4065-abbe-5805b7ca170e', // Get from https://web3forms.com/
     endpoint: 'https://api.web3forms.com/submit'
 };
 
