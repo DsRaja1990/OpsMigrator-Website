@@ -192,20 +192,32 @@ pricingCards.forEach((card, index) => {
 });
 
 // ===========================
-// Contact Form Handling
+// Contact Form Handling with Email Service
 // ===========================
 
 const contactForm = document.getElementById('contactForm');
 
+// Initialize email service
+let emailService = null;
+
+// Wait for config to load
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof EMAIL_CONFIG !== 'undefined' && typeof EmailService !== 'undefined') {
+        emailService = new EmailService(EMAIL_CONFIG);
+        console.log('Email service initialized');
+    }
+});
+
 contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    // Collect form data
     const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        company: document.getElementById('company').value,
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        company: document.getElementById('company').value.trim(),
         migrationType: document.getElementById('migration-type').value,
-        message: document.getElementById('message').value
+        message: document.getElementById('message').value.trim()
     };
     
     // Show loading state
@@ -214,23 +226,40 @@ contactForm.addEventListener('submit', async (e) => {
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     submitButton.disabled = true;
     
-    // Simulate form submission (replace with actual API call)
     try {
-        // TODO: Replace with actual API endpoint
-        // await fetch('/api/contact', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(formData)
-        // });
+        // Check if email service is initialized
+        if (!emailService) {
+            throw new Error('Email service not initialized. Please check configuration.');
+        }
         
-        // Simulate delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Send email using the email service
+        const response = await emailService.send(formData);
+        
+        console.log('Email sent successfully:', response);
         
         // Show success message
         showNotification('Thank you! We\'ll get back to you soon.', 'success');
         contactForm.reset();
+        
     } catch (error) {
-        showNotification('Oops! Something went wrong. Please try again.', 'error');
+        console.error('Email sending failed:', error);
+        
+        // Show error message with more details
+        let errorMessage = 'Oops! Something went wrong. Please try again or email us directly at admin@opsmigrator.in';
+        
+        if (error.message) {
+            if (error.message.includes('not configured')) {
+                errorMessage = 'Email service not configured. Please see EMAILJS_SETUP.md for setup instructions.';
+            } else if (error.message.includes('fill in')) {
+                errorMessage = error.message;
+            } else if (error.message.includes('valid email')) {
+                errorMessage = error.message;
+            } else if (error.message.includes('suspicious')) {
+                errorMessage = error.message;
+            }
+        }
+        
+        showNotification(errorMessage, 'error');
     } finally {
         submitButton.innerHTML = originalText;
         submitButton.disabled = false;
