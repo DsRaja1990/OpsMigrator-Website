@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form Test - OpsMigrator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0066FF;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #0066FF;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0052cc;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-form">
+        <h1>🧪 Contact Form Test</h1>
+        
+        <div class="info">
+            <strong>Test Instructions:</strong><br>
+            1. Fill out the form below<br>
+            2. Click "Send Test Email"<br>
+            3. Check <strong>admin@opsmigrator.in</strong> inbox (and spam folder)<br>
+            4. You should receive the test email within 30 seconds
+        </div>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" id="name" value="Test User" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="email" value="test@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company</label>
+                <input type="text" id="company" value="Test Company Inc.">
+            </div>
+
+            <div class="form-group">
+                <label>Migration Type</label>
+                <select id="migration-type">
+                    <option value="">Select Migration Type</option>
+                    <option value="jira-cloud-ado" selected>Jira Cloud → Azure DevOps</option>
+                    <option value="jira-dc-ado">Jira DC → Azure DevOps</option>
+                    <option value="versionone-ado">VersionOne → Azure DevOps</option>
+                    <option value="alm-ado">HP ALM → Azure DevOps</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Message *</label>
+                <textarea id="message" rows="4" required>This is a test message from the OpsMigrator contact form. If you receive this email, the contact form is working correctly!</textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">
+                📧 Send Test Email
+            </button>
+        </form>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script src="js/email-config.js"></script>
+    <script src="js/email-service.js"></script>
+    <script>
+        const testForm = document.getElementById('testForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusDiv = document.getElementById('status');
+
+        // Initialize email service
+        let emailService = null;
+        if (typeof EMAIL_CONFIG !== 'undefined' && typeof EmailService !== 'undefined') {
+            emailService = new EmailService(EMAIL_CONFIG);
+            console.log('✅ Email service initialized');
+            console.log('Using Web3Forms:', WEB3FORMS_CONFIG.enabled);
+            console.log('Access Key:', WEB3FORMS_CONFIG.accessKey.substring(0, 10) + '...');
+        } else {
+            console.error('❌ Email service not initialized');
+        }
+
+        testForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Sending...';
+            statusDiv.className = 'status';
+            statusDiv.style.display = 'none';
+
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                migrationType: document.getElementById('migration-type').value,
+                message: document.getElementById('message').value.trim()
+            };
+
+            console.log('📤 Sending email with data:', formData);
+
+            try {
+                if (!emailService) {
+                    throw new Error('Email service not initialized');
+                }
+
+                const response = await emailService.send(formData);
+                
+                console.log('✅ Email sent successfully!', response);
+                
+                // Show success
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `
+                    <strong>✅ Success!</strong><br>
+                    Test email sent successfully!<br><br>
+                    <strong>Check admin@opsmigrator.in inbox</strong> (and spam folder).<br>
+                    You should receive the email within 30 seconds.
+                `;
+                statusDiv.style.display = 'block';
+                
+            } catch (error) {
+                console.error('❌ Email sending failed:', error);
+                
+                // Show error
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    <strong>❌ Error!</strong><br>
+                    ${error.message}<br><br>
+                    <strong>Check console (F12) for details.</strong>
+                `;
+                statusDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '📧 Send Test Email';
+            }
+        });
+
+        // Show configuration status on load
+        window.addEventListener('load', () => {
+            console.log('=== Email Service Configuration ===');
+            console.log('Web3Forms Enabled:', WEB3FORMS_CONFIG.enabled);
+            console.log('Web3Forms Access Key:', WEB3FORMS_CONFIG.accessKey);
+            console.log('Recipient Email:', EMAIL_CONFIG.recipientEmail);
+            console.log('==================================');
+        });
+    </script>
+</body>
+</html>
