@@ -1,5 +1,5 @@
 # robots.txt for OpsMigrator AI
-# https://www.opsmigrator.com/robots.txt
+# https://opsmigrator.in/robots.txt
 
 User-agent: *
 Allow: /
@@ -9,7 +9,7 @@ Allow: /js/
 Allow: /images/
 
 # Sitemap location
-Sitemap: https://www.opsmigrator.com/sitemap.xml
+Sitemap: https://opsmigrator.in/sitemap.xml
 
 # Disallow admin or private areas (if any)
 Disallow: /admin/
