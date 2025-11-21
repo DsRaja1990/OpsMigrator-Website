@@ -143,53 +143,23 @@ if (heroStats) {
 }
 
 // ===========================
-// Intersection Observer Animations
+// Reveal Animations Disabled
 // ===========================
 
-const fadeInObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+// To make content appear instantly (no reveal-on-scroll delays), set relevant
+// elements visible immediately and remove transition delays.
+const makeVisibleImmediately = (selector) => {
+    document.querySelectorAll(selector).forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        el.style.transition = 'none';
     });
-}, observerOptions);
+};
 
-// Animate feature cards
-const featureCards = document.querySelectorAll('.feature-card');
-featureCards.forEach((card, index) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-    fadeInObserver.observe(card);
-});
-
-// Animate scenario cards
-const scenarioCards = document.querySelectorAll('.scenario-card');
-scenarioCards.forEach((card, index) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-    fadeInObserver.observe(card);
-});
-
-// Animate process steps
-const processSteps = document.querySelectorAll('.process-step');
-processSteps.forEach((step, index) => {
-    step.style.opacity = '0';
-    step.style.transform = 'translateY(30px)';
-    step.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
-    fadeInObserver.observe(step);
-});
-
-// Animate pricing cards
-const pricingCards = document.querySelectorAll('.pricing-card');
-pricingCards.forEach((card, index) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = `opacity 0.6s ease ${index * 0.15}s, transform 0.6s ease ${index * 0.15}s`;
-    fadeInObserver.observe(card);
-});
+makeVisibleImmediately('.feature-card');
+makeVisibleImmediately('.scenario-card');
+makeVisibleImmediately('.process-step');
+makeVisibleImmediately('.pricing-card');
 
 // ===========================
 // Contact Form Handling with Email Service
